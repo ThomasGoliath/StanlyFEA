@@ -1,0 +1,6 @@
+*.stan
+*.fstan
+*.prj
+*.log
+StanlyFEA/
+StanlyFEA_resources/
