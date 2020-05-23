@@ -7,6 +7,11 @@ fclose all;
 diary off
 format shorte
 
+%% Check for first execution
+if exist('~first_run','file')
+    FirstRun
+end
+
 %% Logger
 % Init logger (with logger max size)
 global Logger
@@ -21,14 +26,19 @@ LogMsg(sprintf('STANLY FEA - FRAME SOLVER 2017 - MATLAB %s',version))
 
 %% Opening window
 global GphUsrInterface
+GphUsrInterface.Figure = gobject(1);
+GphUsrInterface.Axes = gobject(1);
+GphUsrInterface.Ucs = gobject(1);
+GphUsrInterface.Menu = gobject(1);
+GphUsrInterface.ToolBar = gobject(1);
 LogMsg('Start application')
 LogMsg('Set environment variables')
-extension_list={'*.stan','Static Analysis STAN (*.stan)';...
+% List for extension files
+ExtensionFiles={'*.stan','Static Analysis STAN (*.stan)';...
    '*.fstan','Fatigue Analysis STAN (*.fstan)';...
    '*.dstan','Dynamic Analysis STAN (*.dstan)';};
 pause(4.5)
 LogMsg('Opening User Interface')
-GphUsrInterface=gobjects(1);
 BuildGUI;
 
 %% Global variables
