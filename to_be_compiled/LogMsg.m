@@ -28,7 +28,8 @@ if Logger.Index == Logger.Size
 elseif Logger.Index < Logger.Size
     Logger.Index = Logger.Index +1;
 else
-    error('Unexpected log error')
+    % Nel logger non viene usato l'error manager perchè se no diventa un
+    % loop infinito di errori
 end
 Logger.Queue(Logger.Index)={message};
 
@@ -38,5 +39,7 @@ try
         set(Logger.Window,'Value',Logger.Queue(end));
     end
 catch ME
+    % Nel logger non viene usato l'error manager perchè se no diventa un
+    % loop infinito di errori
     error('Unexpected log error')
 end
