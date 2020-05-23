@@ -2,5 +2,6 @@
 *.fstan
 *.prj
 *.log
+*_for_testing.m
 StanlyFEA/
 StanlyFEA_resources/
