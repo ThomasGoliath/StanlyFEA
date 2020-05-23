@@ -1,0 +1,67 @@
+DEL addStanlyRegKeys.reg
+SET /P icopath=<path.txt
+SET icopathSTAN=@="%icopath%\\media\\stan.ico,0"
+SET icopathFSTAN=@="%icopath%\\media\\fstan.ico,0"
+@echo off
+@echo Windows Registry Editor Version 5.00>> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+REM Static Analysis STAN
+@echo [HKEY_CLASSES_ROOT\STANLY.stan.Static.Analysis]>> addStanlyRegKeys.reg
+@echo @="STANLY Static Analysis">> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+@echo [HKEY_CLASSES_ROOT\STANLY.stan.Static.Analysis\DefaultIcon]>> addStanlyRegKeys.reg
+@echo %icopathSTAN%>> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+@echo [HKEY_CLASSES_ROOT\STANLY.stan.Static.Analysis\Shell]>> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+@echo [HKEY_CLASSES_ROOT\STANLY.stan.Static.Analysis\Shell\Open]>> addStanlyRegKeys.reg
+@echo @="Open">> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+@echo [HKEY_CLASSES_ROOT\STANLY.stan.Static.Analysis\Shell\Open\command]>> addStanlyRegKeys.reg
+@echo @=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\>> addStanlyRegKeys.reg
+@echo  00,5c,00,73,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,4e,00,4f,00,\>> addStanlyRegKeys.reg
+@echo  54,00,45,00,50,00,41,00,44,00,2e,00,45,00,58,00,45,00,20,00,25,00,31,00,00,\>> addStanlyRegKeys.reg
+@echo  00>> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+@echo [HKEY_CLASSES_ROOT\.stan]>> addStanlyRegKeys.reg
+@echo @="STANLY.stan.Static.Analysis">> addStanlyRegKeys.reg
+@echo "BrowserFlags"=dword:00000000>> addStanlyRegKeys.reg
+@echo "EditFlags"=dword:00140001>> addStanlyRegKeys.reg
+@echo "AlwaysShowExt"="">> addStanlyRegKeys.reg
+@echo "PerceivedType"="document">> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+@echo [HKEY_CLASSES_ROOT\.stan\ShellNew]>> addStanlyRegKeys.reg
+@echo "Data"=hex:53,54,41,54,49,43,20,41,4e,41,4c,59,53,49,53,20,53,54,41,4e,20,4d,4f,44,45,4c,0a,54,68,69,73,20,73,65,63,74,69,6f,6e,20,69,73,20,66,72,65,65,20,74,6f,20,62,65,20,66,69,6c,6c,65,64,0a,25,20,54,6f,20,72,65,6d,61,72,6b,0a,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,0a,2a,73,74,61,72,74,0a,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,0a,3e,3e,3e,20,4d,45,53,48,20,3c,3c,3c,0a,6e,6f,64,65,73,20,7b,0a,25,6e,09,78,09,79,09,7a,0a,7d,0a,65,6c,65,6d,65,6e,74,73,20,7b,0a,25,65,09,6e,31,09,6e,32,09,73,09,6d,20,20,20,72,75,0a,7d,0a,73,70,72,69,6e,67,73,20,7b,0a,25,65,09,6e,31,09,6e,32,09,4b,0a,7d,0a,6d,65,73,68,20,63,6f,6e,74,72,6f,6c,20,7b,0a,25,65,09,69,6e,0a,7d,0a,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,0a,3e,3e,3e,20,50,52,4f,50,45,52,54,49,45,53,20,3c,3c,3c,0a,73,65,63,74,69,6f,6e,73,20,7b,0a,25,69,64,20,41,09,4a,76,09,4a,77,09,57,76,09,57,77,09,54,76,09,54,77,0a,7d,0a,6d,61,74,65,72,69,61,6c,73,20,7b,0a,25,69,64,20,45,09,76,09,61,09,6d,09,59,53,09,55,54,53,0a,7d,0a,6e,6f,74,63,68,65,73,20,7b,0a,25,6e,09,4b,74,61,09,4b,74,62,09,4b,74,74,0a,7d,0a,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,0a,3e,3e,3e,20,43,4f,4e,53,54,52,41,49,4e,54,53,20,3c,3c,3c,0a,67,72,6f,75,6e,64,20,63,6f,6e,73,74,72,61,69,6e,74,73,20,7b,0a,25,6e,20,20,4b,78,09,4b,79,09,4b,7a,09,4b,72,78,09,4b,72,79,09,4b,72,7a,09,74,68,09,70,68,0a,7d,0a,69,6e,74,65,72,6e,61,6c,20,63,6f,6e,73,74,72,61,69,6e,74,73,20,7b,0a,25,6d,09,73,09,4b,78,20,20,4b,79,20,20,4b,7a,20,20,4b,72,78,20,4b,72,79,20,4b,72,7a,0a,7d,0a,79,69,65,6c,64,65,64,20,63,6f,6e,73,74,72,61,69,6e,74,73,20,7b,0a,25,6e,09,78,09,79,09,7a,09,72,78,20,20,72,79,20,20,72,7a,0a,7d,0a,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,0a,3e,3e,3e,20,4c,4f,41,44,53,20,3c,3c,3c,0a,6e,6f,64,61,6c,20,6c,6f,61,64,73,20,7b,0a,25,6e,09,46,78,09,46,79,09,46,7a,09,4d,78,09,4d,79,09,4d,7a,0a,7d,0a,64,69,73,74,72,69,62,75,74,65,64,20,6c,6f,61,64,73,20,7b,0a,25,65,09,50,75,09,50,76,31,09,50,76,32,09,50,77,31,09,50,77,32,09,4d,71,75,20,69,6e,0a,7d,0a,74,68,65,72,6d,61,6c,20,76,61,72,69,61,74,69,6f,6e,73,20,7b,0a,25,65,09,44,74,5f,73,75,70,5f,32,09,44,74,5f,69,6e,66,5f,32,20,20,20,20,44,74,5f,73,75,70,5f,33,09,44,74,5f,69,6e,66,5f,33,0a,7d,0a,67,72,61,76,69,74,79,20,7b,0a,25,61,78,20,61,79,20,20,61,7a,0a,7d,0a,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,0a,2a,65,6e,64,0a,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d>> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+@echo [HKEY_CLASSES_ROOT\STANLY.fstan.Fatigue.Analysis]>> addStanlyRegKeys.reg
+@echo @="STANLY Fatigue Analysis">> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+@echo [HKEY_CLASSES_ROOT\STANLY.fstan.Fatigue.Analysis\DefaultIcon]>> addStanlyRegKeys.reg
+@echo %icopathFSTAN%>> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+@echo [HKEY_CLASSES_ROOT\STANLY.fstan.Fatigue.Analysis\Shell]>> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+@echo [HKEY_CLASSES_ROOT\STANLY.fstan.Fatigue.Analysis\Shell\Open]>> addStanlyRegKeys.reg
+@echo @="Open">> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+@echo [HKEY_CLASSES_ROOT\STANLY.fstan.Fatigue.Analysis\Shell\Open\command]>> addStanlyRegKeys.reg
+@echo @=hex(2):25,00,53,00,79,00,73,00,74,00,65,00,6d,00,52,00,6f,00,6f,00,74,00,25,\>> addStanlyRegKeys.reg
+@echo   00,5c,00,73,00,79,00,73,00,74,00,65,00,6d,00,33,00,32,00,5c,00,4e,00,4f,00,\>> addStanlyRegKeys.reg
+@echo   54,00,45,00,50,00,41,00,44,00,2e,00,45,00,58,00,45,00,20,00,25,00,31,00,00,\>> addStanlyRegKeys.reg
+@echo   00>> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+@echo [HKEY_CLASSES_ROOT\.fstan]>> addStanlyRegKeys.reg
+@echo @="STANLY.fstan.Fatigue.Analysis">> addStanlyRegKeys.reg
+@echo "BrowserFlags"=dword:00000000>> addStanlyRegKeys.reg
+@echo "EditFlags"=dword:00140001>> addStanlyRegKeys.reg
+@echo "AlwaysShowExt"="">> addStanlyRegKeys.reg
+@echo "PerceivedType"="document">> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg>> addStanlyRegKeys.reg
+@echo [HKEY_CLASSES_ROOT\.fstan\ShellNew]>> addStanlyRegKeys.reg
+@echo "Data"=hex:46,41,54,49,47,55,45,20,41,4e,41,4c,59,53,49,53,20,53,54,41,4e,20,4d,4f,44,45,4c,0a,54,68,69,73,20,73,65,63,74,69,6f,6e,20,69,73,20,66,72,65,65,20,74,6f,20,62,65,20,66,69,6c,6c,65,64,0a,25,20,54,6f,20,72,65,6d,61,72,6b,0a,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,0a,2a,73,74,61,72,74,0a,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,0a,3e,3e,3e,20,4d,45,53,48,20,3c,3c,3c,0a,6e,6f,64,65,73,20,7b,0a,25,6e,09,78,09,79,09,7a,0a,7d,0a,65,6c,65,6d,65,6e,74,73,20,7b,0a,25,65,09,6e,31,09,6e,32,09,73,09,6d,20,20,20,72,75,0a,7d,0a,73,70,72,69,6e,67,73,20,7b,0a,25,65,09,6e,31,09,6e,32,09,4b,0a,7d,0a,6d,65,73,68,20,63,6f,6e,74,72,6f,6c,20,7b,0a,25,65,09,69,6e,0a,7d,0a,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,0a,3e,3e,3e,20,50,52,4f,50,45,52,54,49,45,53,20,3c,3c,3c,0a,73,65,63,74,69,6f,6e,73,20,7b,0a,25,69,64,20,41,09,4a,76,09,4a,77,09,57,76,09,57,77,09,54,76,09,54,77,09,6d,64,0a,7d,0a,6d,61,74,65,72,69,61,6c,73,20,7b,0a,25,69,64,20,45,09,76,09,61,09,6d,09,59,53,09,55,54,53,09,6d,73,0a,7d,0a,6e,6f,74,63,68,65,73,20,7b,0a,25,6e,09,4b,74,62,09,4b,74,74,09,71,0a,7d,0a,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,0a,3e,3e,3e,20,43,4f,4e,53,54,52,41,49,4e,54,53,20,3c,3c,3c,0a,67,72,6f,75,6e,64,20,63,6f,6e,73,74,72,61,69,6e,74,73,20,7b,0a,25,6e,20,20,4b,78,09,4b,79,09,4b,7a,09,4b,72,78,09,4b,72,79,09,4b,72,7a,09,74,68,09,70,68,0a,7d,0a,69,6e,74,65,72,6e,61,6c,20,63,6f,6e,73,74,72,61,69,6e,74,73,20,7b,0a,25,6d,09,73,09,4b,78,20,20,4b,79,20,20,4b,7a,20,20,4b,72,78,20,4b,72,79,20,4b,72,7a,0a,7d,0a,79,69,65,6c,64,65,64,20,63,6f,6e,73,74,72,61,69,6e,74,73,20,7b,0a,25,6e,09,78,09,79,09,7a,09,72,78,20,20,72,79,20,20,72,7a,0a,7d,0a,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,0a,3e,3e,3e,20,41,4c,54,45,52,4e,41,54,45,20,4c,4f,41,44,53,20,3c,3c,3c,0a,6e,6f,64,61,6c,20,6c,6f,61,64,73,20,7b,0a,25,6e,09,46,78,09,46,79,09,46,7a,09,4d,78,09,4d,79,09,4d,7a,0a,7d,0a,64,69,73,74,72,69,62,75,74,65,64,20,6c,6f,61,64,73,20,7b,0a,25,65,09,50,75,09,50,76,31,09,50,76,32,09,50,77,31,09,50,77,32,09,4d,71,75,20,69,6e,0a,7d,0a,74,68,65,72,6d,61,6c,20,76,61,72,69,61,74,69,6f,6e,73,20,7b,0a,25,65,09,44,74,5f,73,75,70,5f,32,09,44,74,5f,69,6e,66,5f,32,20,20,20,20,44,74,5f,73,75,70,5f,33,09,44,74,5f,69,6e,66,5f,33,0a,7d,0a,67,72,61,76,69,74,79,20,7b,0a,25,61,78,20,61,79,20,20,61,7a,0a,7d,0a,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,0a,2a,65,6e,64,0a,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d,2d>> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+@echo [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\stanly.exe]>> addStanlyRegKeys.reg
+@echo @="%icopath%\\stanly.exe">> addStanlyRegKeys.reg
+@echo[ >> addStanlyRegKeys.reg
+EndLocal
+exit

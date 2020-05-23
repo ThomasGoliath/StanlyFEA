@@ -1,0 +1,58 @@
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+[2017/09/09 14:13:32] Start application (23.6094)
+[2017/09/09 14:13:32] Flushing temporary directory (23.6094)
+[2017/09/09 14:13:32] Set environment variables (23.6250)
+[2017/09/09 14:13:37] Opening User Interface (25.8438)
+[2017/09/09 14:13:38] Bugs notice (28.0938)
+[2017/09/09 14:13:44] Ready (33.1563)
+[2017/09/09 14:15:14] [USER] Load STAN (34.4063)
+[2017/09/09 14:16:54] Building global variables (37.5781)
+[2017/09/09 14:16:54] Loading file: binding_cut.stan (37.5781)
+[2017/09/09 14:16:54] readstr\Reading "nodes" block (37.7500)
+[2017/09/09 14:16:54] readstr\Reading "index" block (37.7813)
+[2017/09/09 14:16:54] readstr\Reading "springs" block (37.7969)
+[2017/09/09 14:16:54] readstr\Reading "mesh control" block (37.7969)
+[2017/09/09 14:16:54] readstr\Reading "sections" block (37.8125)
+[2017/09/09 14:16:54] readstr\Reading "materials" block (37.8281)
+[2017/09/09 14:16:54] readstr\Reading "ground constraints" block (37.8281)
+[2017/09/09 14:16:54] readstr\Reading "internal constraints" block (37.8438)
+[2017/09/09 14:16:54] readstr\Reading "yielded constraints" block (37.8594)
+[2017/09/09 14:16:54] readstr\Reading "nodal loads" block (37.8750)
+[2017/09/09 14:16:54] readstr\Reading "distributed loads" block (37.8906)
+[2017/09/09 14:16:54] readstr\Reading "thermal variations" block (37.8906)
+[2017/09/09 14:16:54] readstr\Reading "gravity" block (37.8906)
+[2017/09/09 14:16:54] Checking STR file (37.9063)
+[2017/09/09 14:16:54] readstr\Computing element length and orientation (37.9375)
+[2017/09/09 14:16:54] readstr\Building local reference rotation matrices (37.9688)
+[2017/09/09 14:16:54] readstr\Building DoFs martrix (38.0000)
+[2017/09/09 14:16:54] readstr\Enslavements correction (38.0313)
+[2017/09/09 14:16:54] readstr\Stop reading (38.0313)
+[2017/09/09 14:16:54] Global system assembly (38.0313)
+[2017/09/09 14:16:54] assembly\Stiffness matrix assembly (38.0469)
+[2017/09/09 14:16:54] assembly\Load vector assembly (38.0781)
+[2017/09/09 14:16:54] assembly\Internal elastic constraints correction (38.0781)
+[2017/09/09 14:16:54] Bushing correction (38.0938)
+[2017/09/09 14:16:54] Matrix partitioning (38.0938)
+[2017/09/09 14:16:54] Linear system solved (38.1094)
+[2017/09/09 14:16:54] Computing internal actions (38.1250)
+[2017/09/09 14:16:54] Computing displacements (38.1250)
+[2017/09/09 14:16:54] Computing stresses (38.3594)
+[2017/09/09 14:16:54] Computing strains (38.4063)
+[2017/09/09 14:16:54] Computing safety factors (38.4219)
+[2017/09/09 14:16:55] Structure loaded successfully in 0.765391 seconds (38.4531)
+[2017/09/09 14:16:55] Loading UI (38.4531)
+[2017/09/09 14:16:55] Graph "Mesh" (38.4531)
+
+Nodes		6
+Elements	4
+DoFs		21
+DoBs		15
+
+[2017/09/09 14:16:56] Constructing tables (39.7969)
+[2017/09/09 14:16:57] Operation completed (40.7031)
+[2017/09/09 14:31:29] Closing tables (49.9688)
+[2017/09/09 14:31:29] Reset environment variables (49.9688)
+[2017/09/09 14:31:30] Stop application (50.4531)

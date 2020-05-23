@@ -1,0 +1,26 @@
+function set_title_gui(testo,fig)
+global UIax GUI
+if nargin==1
+    fig=GUI;
+    set(groot,'CurrentFigure',GUI)
+    set(GUI,'CurrentAxes',UIax)
+else
+    set(groot,'CurrentFigure',fig)
+end
+delete(findall(fig,'type','annotation'))
+if iscell(testo)
+    testo=cell2mat(testo);
+end
+fs=10;
+txtctrl=annotation(fig,'textbox',...
+    'String',testo,...
+    'LineStyle','none',...
+    'HorizontalAlignment','left',...
+    'VerticalAlignment','middle',...
+    'FontSize',fs,...
+    'Units','pixel',...
+    'FontWeight','bold',...
+    'FontAngle','normal');
+p=get(txtctrl,'Position');
+p(1:2)=[20 20];
+set(txtctrl,'Position',p);

@@ -1,0 +1,29 @@
+<!--This goes in langs.model.xml-->
+<NotepadPlus>
+	<Languages>
+        <Language name="stanly" ext="stan fstan dyan" commentLine="%" commentStart="" commentEnd="">
+            <Keywords name="instre1">nodes elements springs meshctrl materials sections notches groundbound intbound yieldbound nodeload distrload thermload gravity</Keywords>
+            <Keywords name="instre2"></Keywords>
+            <Keywords name="type1"></Keywords>
+            <Keywords name="type2"></Keywords>
+            <Keywords name="type3"></Keywords>
+            <Keywords name="type4"></Keywords>
+        </Language>
+	</Languages>
+</NotepadPlus>
+<!--This goes in stylers.model.xml-->
+<NotepadPlus>
+    <LexerStyles>
+        <LexerType name="stanly" desc="Stanly" ext="">
+            <WordsStyle name="DEFAULT" styleID="0" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" fontSize="" />
+            <WordsStyle name="COMMENT" styleID="1" fgColor="008000" bgColor="FFFFFF" fontName="" fontStyle="0" fontSize="" />
+            <WordsStyle name="COMMAND" styleID="2" fgColor="8000FF" bgColor="FFFFFF" fontName="" fontStyle="0" fontSize="" />
+            <WordsStyle name="NUMBER" styleID="3" fgColor="FF8000" bgColor="FFFFFF" fontName="" fontStyle="0" fontSize="" />
+            <WordsStyle name="INSTRUCTION WORD" styleID="4" fgColor="0000FF" bgColor="FFFFFF" fontName="" fontStyle="1" fontSize="" keywordClass="instre1" />
+            <WordsStyle name="STRING" styleID="5" fgColor="808080" bgColor="FFFFFF" fontName="" fontStyle="0" fontSize="" />
+            <WordsStyle name="OPERATOR" styleID="6" fgColor="000080" bgColor="FFFFFF" fontName="" fontStyle="1" fontSize="" />
+            <WordsStyle name="IDENTIFIER" styleID="7" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" fontSize="" />
+            <WordsStyle name="DOUBLE QUOTE STRING" styleID="8" fgColor="808080" bgColor="FFFFFF" fontName="" fontStyle="0" fontSize="" />
+        </LexerType>
+    </LexerStyles>
+</NotepadPlus>
