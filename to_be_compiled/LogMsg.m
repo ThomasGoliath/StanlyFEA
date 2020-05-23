@@ -1,6 +1,6 @@
-function status_info(string,user)
+function LogMsg(string,user)
 
-global logger logIndex logWindow logSize
+global Logger
 
 % Check input
 if nargin==1
@@ -18,19 +18,19 @@ end
 fprintf(message);
 
 % manage logger like a queue
-if logIndex == logSize
-    logger(1)=[];
-elseif logIndex < logSize
-    logIndex = logIndex +1;
+if Logger.Index == Logger.Size
+    Logger.Queue(1)=[];
+elseif Logger.Index < Logger.Size
+    Logger.Index = Logger.Index +1;
 else
     error('Unexpected log error')
 end
-logger(logIndex)={message};
+Logger.Queue(Logger.Index)={message};
 
 try
-    if ishandle(logWindow)
-        set(logWindow,'Items',logger);
-        set(logWindow,'Value',logger(end));
+    if ishandle(Logger.Window)
+        set(Logger.Window,'Items',Logger.Queue);
+        set(Logger.Window,'Value',Logger.Queue(end));
     end
 catch ME
     error('Unexpected log error')

@@ -13,21 +13,22 @@ global Logger
 Logger.Size = 50;
 Logger.Index = 0;
 Logger.Queue = {};
+Logger.Window = [];
 if exist('stanly.log','file'), delete('stanly.log'), end
 diary stanly.log;
 fprintf('\n---------------------------------------------------------------\n')
-status_info(sprintf('STANLY FEA - FRAME SOLVER 2017 - MATLAB %s',version))
+LogMsg(sprintf('STANLY FEA - FRAME SOLVER 2017 - MATLAB %s',version))
 
 %% Opening window
 global GphUsrInterface
-GphUsrInterface=gobjects(1);
 LogMsg('Start application')
 LogMsg('Set environment variables')
 extension_list={'*.stan','Static Analysis STAN (*.stan)';...
    '*.fstan','Fatigue Analysis STAN (*.fstan)';...
    '*.dstan','Dynamic Analysis STAN (*.dstan)';};
 pause(4.5)
-status_info('Opening User Interface')
+LogMsg('Opening User Interface')
+GphUsrInterface=gobjects(1);
 BuildGUI;
 
 %% Global variables
