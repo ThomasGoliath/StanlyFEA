@@ -1,23 +1,30 @@
-function BuildGUI
+function InitGUI
 
-%% BuildGUI()
+%% InitGUI()
 % Build the Graphic User Interface object
 %
 
-global GphUsrInterface Logger
+global GphUsrInterface
+global Logger
 
-SizeGUI=get(groot,'ScreenSize');
+% WinBarSize = 41;
+% UpsideBar = 44;
+% SizeGUI=get(groot,'ScreenSize');
+% SizeGUI(2) = WinBarSize;
+% SizeGUI(4) = SizeGUI(4) - WinBarSize - UpsideBar;
 name=sprintf('STANLY FEA 2017 - Copiright \x24B8 Tommaso Cavandoli - MatLab\x24C7 %s',version);
 
-GphUsrInterface=uifigure;
-set(GphUsrInterface,'Name',name)
-set(GphUsrInterface,'NumberTitle','off')
-set(GphUsrInterface,'Position',SizeGUI)
-set(GphUsrInterface,'Color',rgb(0,0,0))
+GphUsrInterface.Figure = uifigure;
+set(GphUsrInterface.Figure,'Name',name)
+set(GphUsrInterface.Figure,'NumberTitle','off')
+set(GphUsrInterface.Figure,'WindowState','maximized')
+%set(GphUsrInterface.Figure,'Position',SizeGUI)
+set(GphUsrInterface.Figure,'Color',rgb(0,0,0))
 
 % Log viewer
-Logger.Window = uilistbox(GphUsrInterface);
-set(Logger.Window,'Position',[5 5 SizeGUI(3)-10 SizeGUI(4)*0.2])
+SizeGUI = get(GphUsrInterface.Figure,'Position');
+Logger.Window = uilistbox(GphUsrInterface.Figure);
+set(Logger.Window,'Position',[5 5 SizeGUI(3) SizeGUI(4)*0.2])
 set(Logger.Window,'Items',Logger.Queue);
 set(Logger.Window,'Value',Logger.Queue(end));
 

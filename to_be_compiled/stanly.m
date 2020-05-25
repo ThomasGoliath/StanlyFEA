@@ -1,7 +1,8 @@
 %% STANLY FEA - FRAME SOLVER version 2017
 
 %%% Tommaso Cavandoli
-clear, clc
+clc
+clear all
 close all
 fclose all;
 diary off
@@ -27,21 +28,19 @@ fprintf('\n---------------------------------------------------------------\n')
 LogMsg(sprintf('STANLY FEA - FRAME SOLVER 2017 - MATLAB %s',version))
 
 %% Opening window
-
-global GphUsrInterface %GUI
-GphUsrInterface.Figure = gobject(1);
-GphUsrInterface.Axes = gobject(1); %UIax
-GphUsrInterface.Colorbar = gobject(1); %cb
-GphUsrInterface.Ucs = gobject(1);
-GphUsrInterface.Menu = gobject(1);
-GphUsrInterface.ToolBar = gobject(1);
 LogMsg('Start application')
 LogMsg('Set environment variables')
 pause(4.5)
-LogMsg('Opening User Interface')
-BuildGUI;
 
 %% Global variables
+
+global GphUsrInterface %GUI
+GphUsrInterface.Figure = gobjects(1);
+GphUsrInterface.Axes = gobjects(1); %UIax
+GphUsrInterface.Colorbar = gobjects(1); %cb
+GphUsrInterface.Ucs = gobjects(1);
+GphUsrInterface.Menu = [];
+GphUsrInterface.ToolBar = gobjects(1);
 
 global Mesh
 % General mesh info
@@ -93,7 +92,9 @@ iasca=4; toll=1e-9; pnres=0;
 opened_uifig=gobjects(1,17);
 
 %% Start program
-InitMenu()
+LogMsg('Opening User Interface')
+InitGUI;
+InitMenu;
 warning OFF BACKTRACE
 pause(.5)
 LogMsg('Ready')
