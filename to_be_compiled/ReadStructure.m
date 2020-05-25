@@ -23,7 +23,7 @@ while ~strcmp(string,'*end')
     %% MESH
     % Nodes global coordinates matrix
     if strcmp(string,'nodes {')
-        status_info('readstr\Reading "nodes" block')
+        status_info('[ReadStructure] Reading "nodes" block')
 		nl=clstart;
         while ~strcmp(string,'}')
 		nl=nl+1;
@@ -46,7 +46,7 @@ while ~strcmp(string,'*end')
     
     % Element index matrix
     if strcmp(string,'elements {')
-        status_info('readstr\Reading "index" block')
+        status_info('[ReadStructure] Reading "index" block')
         nl=clstart;
         while ~strcmp(string,'}')
 		nl=nl+1;
@@ -69,7 +69,7 @@ while ~strcmp(string,'*end')
     
     % Spring index matrix
     if strcmp(string,'springs {')
-        status_info('readstr\Reading "springs" block')
+        status_info('[ReadStructure] Reading "springs" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -90,7 +90,7 @@ while ~strcmp(string,'*end')
     
     % Notch matrix
     if strcmp(string,'notches {')
-        status_info('readstr\Reading "notches" block')
+        status_info('[ReadStructure] Reading "notches" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -111,7 +111,7 @@ while ~strcmp(string,'*end')
     
     % Table of sections properties
     if strcmp(string,'sections {')
-        status_info('readstr\Reading "sections" block')
+        status_info('[ReadStructure] Reading "sections" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -132,7 +132,7 @@ while ~strcmp(string,'*end')
     
     % Table of material properties
     if strcmp(string,'materials {')
-        status_info('readstr\Reading "materials" block')
+        status_info('[ReadStructure] Reading "materials" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -154,7 +154,7 @@ while ~strcmp(string,'*end')
     %% CONSTRAINTS
     % DOF matrix
     if strcmp(string,'ground constraints {')
-        status_info('readstr\Reading "ground constraints" block')
+        status_info('[ReadStructure] Reading "ground constraints" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -184,7 +184,7 @@ while ~strcmp(string,'*end')
         end
     end
     if strcmp(string,'internal constraints {')
-        status_info('readstr\Reading "internal constraints" block')
+        status_info('[ReadStructure] Reading "internal constraints" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -207,7 +207,7 @@ while ~strcmp(string,'*end')
     
     % Yielded constraints matrix
     if strcmp(string,'yielded constraints {')
-        status_info('readstr\Reading "yielded constraints" block')
+        status_info('[ReadStructure] Reading "yielded constraints" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -229,7 +229,7 @@ while ~strcmp(string,'*end')
     %% LOADS
     % Loads matrix
     if strcmp(string,'nodal loads {')
-        status_info('readstr\Reading "nodal loads" block')
+        status_info('[ReadStructure] Reading "nodal loads" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -250,7 +250,7 @@ while ~strcmp(string,'*end')
     
     % Thermal variations matrix
     if strcmp(string,'thermal variations {')
-        status_info('readstr\Reading "thermal variations" block')
+        status_info('[ReadStructure] Reading "thermal variations" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -271,7 +271,7 @@ while ~strcmp(string,'*end')
     
     % Distributed loads matrix
     if strcmp(string,'distributed loads {')
-        status_info('readstr\Reading "distributed loads" block')
+        status_info('[ReadStructure] Reading "distributed loads" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -292,7 +292,7 @@ while ~strcmp(string,'*end')
     
     % Mesh control
     if strcmp(string,'mesh control {')
-        status_info('readstr\Reading "mesh control" block')
+        status_info('[ReadStructure] Reading "mesh control" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -316,7 +316,7 @@ while ~strcmp(string,'*end')
     
     % Gravity
     if strcmp(string,'gravity {')
-        status_info('readstr\Reading "gravity" block')
+        status_info('[ReadStructure] Reading "gravity" block')
         gg=1; nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -339,7 +339,7 @@ end
 glob_err_ctrl
 
 % Length and angles
-status_info('readstr\Computing element length and orientation')
+status_info('[ReadStructure] Computing element length and orientation')
 L=zeros(ne,1); ang=zeros(ne,2);
 for i=1:size(index,1)
     rel_coord=xyztab(index(i,3),2:4)-xyztab(index(i,2),2:4);
@@ -350,7 +350,7 @@ end
 ang=[ang index(:,end)*pi/180]; index(:,end)=[];
 
 % Local to global matrices
-status_info('readstr\Building local reference rotation matrices')
+status_info('[ReadStructure] Building local reference rotation matrices')
 Li=zeros(12,12,ne);
 Ri=zeros(3,3,ne);
 for i=1:ne
@@ -370,16 +370,16 @@ d_sca=[max(xyztab(:,2))-min(xyztab(:,2))
     max(xyztab(:,4))-min(xyztab(:,4))];
 d_sca=max(d_sca);
 if ~isempty(G)
-    status_info('readstr\Gravity correction')
+    status_info('[ReadStructure] Gravity correction')
     gravity(G);
 end
 if ~isempty(Qtab)
-    status_info('readstr\Distributed loads correction')
+    status_info('[ReadStructure] Distributed loads correction')
     distrol_corr;
 end
 
 % dtab construction
-status_info('readstr\Building DoFs martrix')
+status_info('[ReadStructure] Building DoFs martrix')
 ndof=sum(sum(dtab==0));
 ndob=nn*6-ndof;
 dtab=dtab.';
@@ -387,7 +387,7 @@ dtab((dtab==-1))=(ndof+1):(ndof+sum(sum(dtab==-1)));
 dtab((dtab==0))=1:ndof;
 dtab=dtab.';
 if ~isempty(axx)
-    status_info('readstr\Enslavements correction')
+    status_info('[ReadStructure] Enslavements correction')
     for i=1:size(axx,1)
         for j=3:8
             if axx(i,j)==Inf
@@ -399,7 +399,7 @@ end
 
 % Spring matrix construction
 if ~isempty(springs)
-    status_info('readstr\Springs matrix construction')
+    status_info('[ReadStructure] Springs matrix construction')
 end
 springs=[springs zeros(size(springs,1),2)];
 for i=1:size(springs,1)
@@ -407,5 +407,5 @@ for i=1:size(springs,1)
     sph_coord=cart2sph(rel_coord).';
     springs(i,5:6)=sph_coord(2:3);
 end
-status_info('readstr\Stop reading')
+status_info('[ReadStructure] Stop reading')
 end
