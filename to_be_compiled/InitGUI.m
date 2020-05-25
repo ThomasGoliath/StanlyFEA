@@ -1,5 +1,4 @@
 function InitGUI
-
 %% InitGUI()
 % Build the Graphic User Interface object
 %

@@ -1,5 +1,4 @@
 function InitMenu
-
 %% InitMenu()
 % Build the Menu Bar for the Graphic User Interface
 %
@@ -16,7 +15,7 @@ extEnabled(FileManager.FileTypes.Enabled)={'on'};
 % -------------------------------------------------------------------------
 % File menu
 % -------------------------------------------------------------------------
-GphUsrInterface.Menu.File.root = uimenu(GphUsrInterface.Figure,'Label','File');
+GphUsrInterface.Menu.File.root = uimenu(GphUsrInterface.Figure,'Label','File','Separator','on');
 GphUsrInterface.Menu.File.BlankModel.root = uimenu(GphUsrInterface.Menu.File.root,'Label','Blank model');
 GphUsrInterface.Menu.File.BlankModel.StaticAnalysis = uimenu(GphUsrInterface.Menu.File.BlankModel.root,'Label','Static analysis','Callback','extnum=1; blank_stan','Enable',char(extEnabled(1)));
 GphUsrInterface.Menu.File.BlankModel.FatigueAnalysis = uimenu(GphUsrInterface.Menu.File.BlankModel.root,'Label','Fatigue analysis','Callback','extnum=2; blank_stan','Enable',char(extEnabled(2)));
@@ -33,7 +32,7 @@ GphUsrInterface.Menu.File.Quit = uimenu(GphUsrInterface.Menu.File.root,'Label','
 % -------------------------------------------------------------------------
 % Model menu
 % -------------------------------------------------------------------------
-GphUsrInterface.Menu.Model.root = uimenu(GphUsrInterface.Figure,'Label','Model','Enable','off');
+GphUsrInterface.Menu.Model.root = uimenu(GphUsrInterface.Figure,'Label','Model','Separator','on','Enable','off');
 GphUsrInterface.Menu.Model.Mesh = uimenu(GphUsrInterface.Menu.Model.root,'Label','Mesh','Enable','off','Callback','AXLIM=axis; cla(UIax), meshstr, axis(AXLIM)');
 GphUsrInterface.Menu.Model.Materials = uimenu(GphUsrInterface.Menu.Model.root,'Label','Materials','Callback','AXLIM=axis; cla(UIax), materials_mesh, axis(AXLIM)','Separator','on','Enable','off');
 GphUsrInterface.Menu.Model.Sections = uimenu(GphUsrInterface.Menu.Model.root,'Label','Section properties','Callback','AXLIM=axis; cla(UIax), csection_mesh, axis(AXLIM)','Enable','off');
@@ -44,7 +43,7 @@ GphUsrInterface.Menu.Model.Loads = uimenu(GphUsrInterface.Menu.Model.root,'Label
 % -------------------------------------------------------------------------
 % Internal Forces menu
 % -------------------------------------------------------------------------
-GphUsrInterface.Menu.IntForces.root = uimenu(GphUsrInterface.Figure,'Label','Internal Forces','Enable','off');
+GphUsrInterface.Menu.IntForces.root = uimenu(GphUsrInterface.Figure,'Label','Internal Forces','Separator','on','Enable','off');
 GphUsrInterface.Menu.IntForces.Axial = uimenu(GphUsrInterface.Menu.IntForces.root,'Label','Axial load','Callback','AXLIM=axis; cla(UIax), axial(int_act,iasca), axis(AXLIM)','Enable','off');
 GphUsrInterface.Menu.IntForces.Shear = uimenu(GphUsrInterface.Menu.IntForces.root,'Label','Shear load','Callback','AXLIM=axis; cla(UIax), shear(int_act,iasca), axis(AXLIM)','Enable','off');
 GphUsrInterface.Menu.IntForces.Bending = uimenu(GphUsrInterface.Menu.IntForces.root,'Label','Bending moment','Callback','AXLIM=axis; cla(UIax), bending(int_act,iasca), axis(AXLIM)','Separator','on','Enable','off');
@@ -54,7 +53,7 @@ GphUsrInterface.Menu.IntForces.Torque = uimenu(GphUsrInterface.Menu.IntForces.ro
 % -------------------------------------------------------------------------
 % Stress menu
 % -------------------------------------------------------------------------
-GphUsrInterface.Menu.Stress.root=uimenu(GphUsrInterface.Figure,'Label','Stress','Enable','off');
+GphUsrInterface.Menu.Stress.root=uimenu(GphUsrInterface.Figure,'Label','Stress','Separator','on','Enable','off');
 GphUsrInterface.Menu.Stress.SecDet = uimenu(GphUsrInterface.Menu.Stress.root,'Label','Section details','Callback','secdetail(int_act)','Enable','off');
 GphUsrInterface.Menu.Stress.Su = uimenu(GphUsrInterface.Menu.Stress.root,'Label','Su','Callback','AXLIM=axis; cla(UIax), sigmass(1,SS,SSnom), axis(AXLIM)','Separator','on','Enable','off');
 GphUsrInterface.Menu.Stress.Suv = uimenu(GphUsrInterface.Menu.Stress.root,'Label','Suv','Callback','AXLIM=axis; cla(UIax), sigmass(2,SS,SSnom), axis(AXLIM)','Enable','off');
@@ -69,7 +68,7 @@ GphUsrInterface.Menu.Stress.ThirdInv = uimenu(GphUsrInterface.Menu.Stress.root,'
 % -------------------------------------------------------------------------
 % Strain menu
 % -------------------------------------------------------------------------
-GphUsrInterface.Menu.Strain.root = uimenu(GphUsrInterface.Figure,'Label','Strain','Enable','off');
+GphUsrInterface.Menu.Strain.root = uimenu(GphUsrInterface.Figure,'Label','Strain','Separator','on','Enable','off');
 GphUsrInterface.Menu.Strain.Displ.root = uimenu(GphUsrInterface.Menu.Strain.root,'Label','Displacements','Enable','off');
 GphUsrInterface.Menu.Strain.Displ.Global.root = uimenu(GphUsrInterface.Menu.Strain.Displ.root,'Label','Global','Enable','off');
 GphUsrInterface.Menu.Strain.Displ.Local.root = uimenu(GphUsrInterface.Menu.Strain.Displ.root,'Label','Local','Enable','off');
@@ -97,7 +96,7 @@ GphUsrInterface.Menu.Strain.ThirdInv = uimenu(GphUsrInterface.Menu.Strain.root,'
 % -------------------------------------------------------------------------
 % Fatigue menu
 % -------------------------------------------------------------------------
-GphUsrInterface.Menu.Fatigue.root = uimenu(GphUsrInterface.Figure,'Label','Fatigue','Enable','off');
+GphUsrInterface.Menu.Fatigue.root = uimenu(GphUsrInterface.Figure,'Label','Fatigue','Separator','on','Enable','off');
 GphUsrInterface.Menu.Fatigue.GP = uimenu(GphUsrInterface.Menu.Fatigue.root,'Label','Gough-Pollard','Callback','AXLIM=axis; cla(UIax), fatigue_plot(1,FF,FFnom), axis(AXLIM)','Enable','off');
 GphUsrInterface.Menu.Fatigue.S = uimenu(GphUsrInterface.Menu.Fatigue.root,'Label','Sines','Callback','AXLIM=axis; cla(UIax), fatigue_plot(2,FF,FFnom), axis(AXLIM)','Enable','off');
 GphUsrInterface.Menu.Fatigue.Endurance = uimenu(GphUsrInterface.Menu.Fatigue.root,'Label','Endurance limit','Callback','AXLIM=axis; cla(UIax), fatigue_plot(3,FF,FFnom), axis(AXLIM)','Separator','on','Enable','off');
@@ -107,13 +106,13 @@ GphUsrInterface.Menu.Fatigue.Life = uimenu(GphUsrInterface.Menu.Fatigue.root,'La
 % -------------------------------------------------------------------------
 % Dynamics menu
 % -------------------------------------------------------------------------
-GphUsrInterface.Menu.Dynamics.root = uimenu(GphUsrInterface.Figure,'Label','Dynamics','Enable','off');
+GphUsrInterface.Menu.Dynamics.root = uimenu(GphUsrInterface.Figure,'Label','Dynamics','Separator','on','Enable','off');
 
 
 % -------------------------------------------------------------------------
 % Tables menu
 % -------------------------------------------------------------------------
-GphUsrInterface.Menu.Tables.root = uimenu(GphUsrInterface.Figure,'Label','Tables','Enable','off');
+GphUsrInterface.Menu.Tables.root = uimenu(GphUsrInterface.Figure,'Label','Tables','Separator','on','Enable','off');
 GphUsrInterface.Menu.Tables.Nodes = uimenu(GphUsrInterface.Menu.Tables.root,'Label','Nodal coordinates','Callback','ktab=1; tabDisplay','Enable','off');
 GphUsrInterface.Menu.Tables.Elements = uimenu(GphUsrInterface.Menu.Tables.root,'Label','Index matrix','Callback','ktab=2; tabDisplay','Enable','off');
 GphUsrInterface.Menu.Tables.Enslavements = uimenu(GphUsrInterface.Menu.Tables.root,'Label','Enslavements matrix','Callback','ktab=3; tabDisplay','Enable','off');
@@ -136,7 +135,7 @@ GphUsrInterface.Menu.Tables.Fatigue = uimenu(GphUsrInterface.Menu.Tables.root,'L
 % -------------------------------------------------------------------------
 % Documentation menu
 % -------------------------------------------------------------------------
-GphUsrInterface.Menu.Documentation.root = uimenu(GphUsrInterface.Figure,'Label','Documentation');
+GphUsrInterface.Menu.Documentation.root = uimenu(GphUsrInterface.Figure,'Label','Documentation','Separator','on');
 GphUsrInterface.Menu.Documentation.Input = uimenu(GphUsrInterface.Menu.Documentation.root,'Label','Input manual','Callback','winopen inp_manual.pdf','Enable','on');
 GphUsrInterface.Menu.Documentation.Output = uimenu(GphUsrInterface.Menu.Documentation.root,'Label','Output manual','Callback','winopen out_manual.pdf','Enable','off');
 GphUsrInterface.Menu.Documentation.License = uimenu(GphUsrInterface.Menu.Documentation.root,'Label','License','Callback','open_lic','Separator','on');

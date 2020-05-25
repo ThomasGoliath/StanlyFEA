@@ -1,5 +1,4 @@
 function LogMsg(string,user)
-
 %% LogMsg(string,user)
 % Log a string into the logger. Manage logger (file and Viewing). It
 % manages also data binding with the log graphic object
