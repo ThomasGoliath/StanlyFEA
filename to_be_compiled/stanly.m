@@ -24,8 +24,11 @@ Logger.Queue = {};
 Logger.Window = [];
 if exist('stanly.log','file'), delete('stanly.log'), end
 diary stanly.log;
-fprintf('\n---------------------------------------------------------------\n')
-LogMsg(sprintf('STANLY FEA - FRAME SOLVER 2017 - MATLAB %s',version))
+separator = '-';
+header = sprintf('STANLY FEA - FRAME SOLVER 2017 - MATLAB %s',version);
+while (length(separator)<100), separator = strcat(separator,'-'); end
+fprintf('\n%s\n',separator);
+LogMsg(header)
 
 %% Opening window
 LogMsg('Start application')
