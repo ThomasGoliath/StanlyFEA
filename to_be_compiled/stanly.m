@@ -8,11 +8,13 @@ diary off
 format shorte
 
 %% Check for first execution
+
 if exist('~first_run','file')
     FirstRun
 end
 
 %% Logger
+
 % Init logger (with logger max size)
 global Logger
 Logger.Size = 50;
@@ -25,44 +27,77 @@ fprintf('\n---------------------------------------------------------------\n')
 LogMsg(sprintf('STANLY FEA - FRAME SOLVER 2017 - MATLAB %s',version))
 
 %% Opening window
-global GphUsrInterface
+
+global GphUsrInterface %GUI
 GphUsrInterface.Figure = gobject(1);
-GphUsrInterface.Axes = gobject(1);
+GphUsrInterface.Axes = gobject(1); %UIax
+GphUsrInterface.Colorbar = gobject(1); %cb
 GphUsrInterface.Ucs = gobject(1);
 GphUsrInterface.Menu = gobject(1);
 GphUsrInterface.ToolBar = gobject(1);
 LogMsg('Start application')
 LogMsg('Set environment variables')
-% List for extension files
-ExtensionFiles={'*.stan','Static Analysis STAN (*.stan)';...
-   '*.fstan','Fatigue Analysis STAN (*.fstan)';...
-   '*.dstan','Dynamic Analysis STAN (*.dstan)';};
 pause(4.5)
 LogMsg('Opening User Interface')
 BuildGUI;
 
 %% Global variables
-global index bush
+
+global Mesh
+% General mesh info
+Mesh.Numbers.Dofs = 0; %ndof
+Mesh.Numbers.Dobs = 0; %ndob
+Mesh.Numbers.Nodes = 0; %nn
+Mesh.Numbers.Elements = 0; %ne
+% Elements
+Mesh.Element.Index = 0; % index
+Mesh.Element.Length = 0; % L
+Mesh.Element.SphAng = [0 0]; % ang
+Mesh.Element.Loc2Glob = zeros(12); %Li
+Mesh.Element.Rotated = zeros(3); %Li
+% Nodes
+Mesh.Nodes.Tab = [];  % xyztab
+Mesh.Springs.Tab = []; % springs
+
+global Properties
+Properties.Materials=[]; %material
+Properties.Sections=[]; %sections
+Properties.Notches=[]; %notch
+
+global Loads
+Loads.Nodal = []; %Ftab
+Loads.Elemental = []; %Qtab
+Loads.Thermal = []; %Ttab
+
+global Constraints
+Constraints.Ground = []; %dtab
+Constraints.Bushing = []; %bush
+
+global FileManager
+FileManager.CurrentFile.Name = 0;
+FileManager.CurrentFile.Path = 0;
+FileManager.CurrentFile.FileType = 0; %filetype
+FileManager.FileTypes.Enabled = [1 2]; %ext_list_sel
+FileManager.FileTypes.List ={'*.stan','Static Analysis STAN (*.stan)';...
+                '*.fstan','Fatigue Analysis STAN (*.fstan)';...
+                '*.dstan','Dynamic Analysis STAN (*.dstan)';};
+
+global FiguresStack
+
 global dtab axx incl
-global xyztab ph_nodes ph_elems
-global material
-global sections notch
-global Ftab Ttab Qtab
-global nn ne ndof ndob
-global L ang d_sca cb
-global Li Ri Kcorr springs
-global ext_list_sel filetype
-ext_list_sel=1:2;
-filetype=0; stan_flag=1; bckgr=0;
+global ph_nodes ph_elems
+global d_sca
+global Kcorr
+stan_flag=1; bckgr=0;
 iasca=4; toll=1e-9; pnres=0;
 opened_uifig=gobjects(1,17);
 
 %% Start program
-menu_const_open(GUI)
+InitMenu()
 warning OFF BACKTRACE
 pause(.5)
-status_info('Ready')
-uiwait(GUI)
+LogMsg('Ready')
+uiwait(GphUsrInterface.Figure)
 
 %% Closing program
 boole_vec=false(1,17);
@@ -73,15 +108,15 @@ for i=1:17
 end
 opened_uifig(~boole_vec)=[];
 if ~isempty(opened_uifig)
-    status_info('Closing tables')
+    LogMsg('Closing tables')
     close(opened_uifig)
 end
 if exist('lic_fig','var')
-	status_info('Closing license window')
+	LogMsg('Closing license window')
     close(lic_fig)
 end
-status_info('Reset environment variables')
-status_info('Stop application')
+LogMsg('Reset environment variables')
+LogMsg('Stop application')
 fprintf('\n')
 warning ON BACKTRACE
 diary off
