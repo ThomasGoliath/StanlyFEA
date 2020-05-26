@@ -1,24 +1,38 @@
-% Structure loading
-status_info('Load STAN',1)
-if exist('fname','var')
-    if fname(1)~=0
-        old_fname=fname;
-    end
-end
+function Loader
+
+global FileManager
+global Mesh
+
+% Backup del file corrente
+LogMsg('Load STAN',1)
+FileManager.PreviousFile = FileManager.CurrentFile;
+
 stan_flag=1;
-[fname,pname,filetype]=uigetfile(extension_list(ext_list_sel,:),...
-    'Select STAN input file','.\structures\');
-if fname~=0
-    switch filetype
-        case 1
-            STAsolver
-            if exist('err_rep','var'), clear err_rep; return; end
-            status_info('Loading UI')
-            status_info('Graph "Mesh"')
-            fprintf('Nodes\t\t%i\nElements\t%i\nDoFs\t\t%i\nDoBs\t\t%i\n',...
-                nn,ne,ndof,ndob)
+% User sceglie il file da aprire
+[FileManager.CurrentFile.Name,FileManager.CurrentFile.Path,...
+    FileManager.CurrentFile.Filetype]...
+    = uigetfile(FileManager.FileTypes.EnabledList,...
+    'Select STAN input file',FileManager.DefaultPath);
+
+if FileManager.CurrentFile.Name~=0
+    
+    switch FileManager.CurrentFile.Filetype
+        
+        % (.stan) STATIC ANALYSIS
+        case 1            
+            SolverStatic
+            if exist('err_rep','var'), clear err_rep; return; end % TODO sistema
+            LogMsg('Loading UI')
+            LogMsg('Graph "Mesh"')
+            LogMsg(sprintf('Nodes\t\t%i',Mesh.Numbers.Nodes))
+            LogMsg(sprintf('Elements\t\t%i',Mesh.Numbers.Elements))
+            LogMsg(sprintf('nDoFs\t\t%i',Mesh.Numbers.Dofs))
+            LogMsg(sprintf('nDoBs\t\t%i',Mesh.Numbers.Dobs))
+            
         case 2
-            if exist(strcat(pname,fname(1:end-5),'stan'),'file')
+            % Controllo se esiste anche il file STAN per carichi medi
+            if exist(strcat(FileManager.CurrentFile.Path,...
+                    FileManager.CurrentFile.Name(1:end-5),'stan'),'file')
                 altfname=fname; fname=strcat(fname(1:end-5),'stan');
                 filetype=1; stan_flag=0;
                 STAsolver

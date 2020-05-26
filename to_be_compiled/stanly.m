@@ -79,10 +79,16 @@ global FileManager
 FileManager.CurrentFile.Name = 0;
 FileManager.CurrentFile.Path = 0;
 FileManager.CurrentFile.FileType = 0; %filetype
+FileManager.PreviousFile.Name = 0;
+FileManager.PreviousFile.Path = 0;
+FileManager.PreviousFile.FileType = 0; %filetype
 FileManager.FileTypes.Enabled = [1 2]; %ext_list_sel
 FileManager.FileTypes.List ={'*.stan','Static Analysis STAN (*.stan)';...
                 '*.fstan','Fatigue Analysis STAN (*.fstan)';...
                 '*.dyan','Dynamic Analysis STAN (*.dyan)';};
+FileManager.FileTypes.EnabledList =...
+    FileManager.FileTypes.List(FileManager.FileTypes.Enabled,:);
+FileManager.DefaultPath = ('.\structures\');
 
 global FiguresStack
 
