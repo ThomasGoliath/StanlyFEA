@@ -20,12 +20,12 @@ GphUsrInterface.Menu.File.BlankModel.root = uimenu(GphUsrInterface.Menu.File.roo
 GphUsrInterface.Menu.File.BlankModel.StaticAnalysis = uimenu(GphUsrInterface.Menu.File.BlankModel.root,'Label','Static analysis','Callback','BlankModel(1)','Enable',char(extEnabled(1)));
 GphUsrInterface.Menu.File.BlankModel.FatigueAnalysis = uimenu(GphUsrInterface.Menu.File.BlankModel.root,'Label','Fatigue analysis','Callback','BlankModel(2)','Enable',char(extEnabled(2)));
 GphUsrInterface.Menu.File.BlankModel.DynamicAnalysis = uimenu(GphUsrInterface.Menu.File.BlankModel.root,'Label','Dynamic analysis','Callback','BlankModel(3)','Enable',char(extEnabled(3)));
-GphUsrInterface.Menu.File.OpenStan = uimenu(GphUsrInterface.Menu.File.root,'Label','Open STAN','Callback','open_stan');
-GphUsrInterface.Menu.File.LoadStan = uimenu(GphUsrInterface.Menu.File.root,'Label','Load STAN','Callback','loader','Separator','on');
+GphUsrInterface.Menu.File.OpenStan = uimenu(GphUsrInterface.Menu.File.root,'Label','Open STAN','Callback','OpenStan');
+GphUsrInterface.Menu.File.LoadStan = uimenu(GphUsrInterface.Menu.File.root,'Label','Load STAN','Callback','Loader','Separator','on');
 GphUsrInterface.Menu.File.Export.root = uimenu(GphUsrInterface.Menu.File.root,'Label','Export','Enable','off');
-GphUsrInterface.Menu.File.Export.Report = uimenu(GphUsrInterface.Menu.File.Export.root,'Label','Report','Callback','pub_rep','Enable','off');
-GphUsrInterface.Menu.File.Export.Workspace = uimenu(GphUsrInterface.Menu.File.Export.root,'Label','Workspace','Callback','export_mat','Enable','off');
-GphUsrInterface.Menu.File.CloseStan = uimenu(GphUsrInterface.Menu.File.root,'Label','Close STAN','Callback','close_stan','Enable','off','Separator','on');
+GphUsrInterface.Menu.File.Export.Report = uimenu(GphUsrInterface.Menu.File.Export.root,'Label','Report','Callback','PublishReport','Enable','off');
+GphUsrInterface.Menu.File.Export.Workspace = uimenu(GphUsrInterface.Menu.File.Export.root,'Label','Workspace','Callback','ExportMat','Enable','off');
+GphUsrInterface.Menu.File.CloseStan = uimenu(GphUsrInterface.Menu.File.root,'Label','Close STAN','Callback','CloseStan','Enable','off','Separator','on');
 GphUsrInterface.Menu.File.Quit = uimenu(GphUsrInterface.Menu.File.root,'Label','Quit','Callback','close all');
 
 
