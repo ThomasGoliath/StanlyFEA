@@ -11,21 +11,21 @@ function BlankModel(modelType)
         
         % (.stan) Static Analysis
         case 1
-            fPath = strcat(cd,'model.stan');
+            fPath = strcat(cd,'\model.stan');
             fID = fopen(fPath,'w+');
             fwrite(fID,ModelStan);
             fclose(fID);
             
         % (.fstan) Fatigue Analysis
         case 2
-            fPath = strcat(cd,'model.fstan');
+            fPath = strcat(cd,'\model.fstan');
             fID = fopen(fPath,'w+');
             fwrite(fID,ModelFstan);
             fclose(fID);
             
         % (.dyan) Dynamics Analysis
         case 3
-            fPath = strcat(cd,'model.dyan');
+            fPath = strcat(cd,'\model.dyan');
             fID = fopen(fPath,'w+');
             fwrite(fID,ModelDstan);
             fclose(fID);
@@ -34,7 +34,7 @@ function BlankModel(modelType)
             ErrorManager('InvalidFileType')
     end
     
-    dos(sprintf('notepad.exe .%s',fPath));
+    dos(sprintf('notepad.exe %s',fPath));
     LogMsg(sprintf('Blank model opened [%i]',modelType))
     
 end

@@ -17,9 +17,9 @@ extEnabled(FileManager.FileTypes.Enabled)={'on'};
 % -------------------------------------------------------------------------
 GphUsrInterface.Menu.File.root = uimenu(GphUsrInterface.Figure,'Label','File','Separator','on');
 GphUsrInterface.Menu.File.BlankModel.root = uimenu(GphUsrInterface.Menu.File.root,'Label','Blank model');
-GphUsrInterface.Menu.File.BlankModel.StaticAnalysis = uimenu(GphUsrInterface.Menu.File.BlankModel.root,'Label','Static analysis','Callback','extnum=1; blank_stan','Enable',char(extEnabled(1)));
-GphUsrInterface.Menu.File.BlankModel.FatigueAnalysis = uimenu(GphUsrInterface.Menu.File.BlankModel.root,'Label','Fatigue analysis','Callback','extnum=2; blank_stan','Enable',char(extEnabled(2)));
-GphUsrInterface.Menu.File.BlankModel.DynamicAnalysis = uimenu(GphUsrInterface.Menu.File.BlankModel.root,'Label','Dynamic analysis','Callback','extnum=3; blank_stan','Enable',char(extEnabled(3)));
+GphUsrInterface.Menu.File.BlankModel.StaticAnalysis = uimenu(GphUsrInterface.Menu.File.BlankModel.root,'Label','Static analysis','Callback','BlankModel(1)','Enable',char(extEnabled(1)));
+GphUsrInterface.Menu.File.BlankModel.FatigueAnalysis = uimenu(GphUsrInterface.Menu.File.BlankModel.root,'Label','Fatigue analysis','Callback','BlankModel(2)','Enable',char(extEnabled(2)));
+GphUsrInterface.Menu.File.BlankModel.DynamicAnalysis = uimenu(GphUsrInterface.Menu.File.BlankModel.root,'Label','Dynamic analysis','Callback','BlankModel(3)','Enable',char(extEnabled(3)));
 GphUsrInterface.Menu.File.OpenStan = uimenu(GphUsrInterface.Menu.File.root,'Label','Open STAN','Callback','open_stan');
 GphUsrInterface.Menu.File.LoadStan = uimenu(GphUsrInterface.Menu.File.root,'Label','Load STAN','Callback','loader','Separator','on');
 GphUsrInterface.Menu.File.Export.root = uimenu(GphUsrInterface.Menu.File.root,'Label','Export','Enable','off');
