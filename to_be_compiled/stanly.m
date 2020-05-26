@@ -82,7 +82,7 @@ FileManager.CurrentFile.FileType = 0; %filetype
 FileManager.FileTypes.Enabled = [1 2]; %ext_list_sel
 FileManager.FileTypes.List ={'*.stan','Static Analysis STAN (*.stan)';...
                 '*.fstan','Fatigue Analysis STAN (*.fstan)';...
-                '*.dstan','Dynamic Analysis STAN (*.dstan)';};
+                '*.dyan','Dynamic Analysis STAN (*.dyan)';};
 
 global FiguresStack
 

@@ -1,5 +1,4 @@
 function ErrorManager(message, exception)
-
 %% ErrorManager(message, exception)
 % Manages the expetions logging and recording with personal messages
 %
