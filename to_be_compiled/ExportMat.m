@@ -1,4 +1,6 @@
 function ExportMat
+%% ExportMat
+% Save global variables in a .mat file
 
     global FileManager
     global Mesh
