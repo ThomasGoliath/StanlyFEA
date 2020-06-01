@@ -45,36 +45,6 @@ GphUsrInterface.Ucs = gobjects(1);
 GphUsrInterface.Menu = [];
 GphUsrInterface.ToolBar = gobjects(1);
 
-global Mesh
-% General mesh info
-Mesh.Numbers.Dofs = 0; %ndof
-Mesh.Numbers.Dobs = 0; %ndob
-Mesh.Numbers.Nodes = 0; %nn
-Mesh.Numbers.Elements = 0; %ne
-% Elements
-Mesh.Element.Index = 0; % index
-Mesh.Element.Length = 0; % L
-Mesh.Element.SphAng = [0 0]; % ang
-Mesh.Element.Loc2Glob = zeros(12); %Li
-Mesh.Element.Rotated = zeros(3); %Li
-% Nodes
-Mesh.Nodes.Tab = [];  % xyztab
-Mesh.Springs.Tab = []; % springs
-
-global Properties
-Properties.Materials=[]; %material
-Properties.Sections=[]; %sections
-Properties.Notches=[]; %notch
-
-global Loads
-Loads.Nodal = []; %Ftab
-Loads.Elemental = []; %Qtab
-Loads.Thermal = []; %Ttab
-
-global Constraints
-Constraints.Ground = []; %dtab
-Constraints.Bushing = []; %bush
-
 global FileManager
 FileManager.CurrentFile.Name = 0;
 FileManager.CurrentFile.Path = 0;
@@ -89,6 +59,8 @@ FileManager.FileTypes.List ={'*.stan','Static Analysis STAN (*.stan)';...
 FileManager.FileTypes.EnabledList =...
     FileManager.FileTypes.List(FileManager.FileTypes.Enabled,:);
 FileManager.DefaultPath = ('.\structures\');
+
+InitGlobalVars
 
 global FiguresStack
 
