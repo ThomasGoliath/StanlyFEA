@@ -44,6 +44,7 @@ GphUsrInterface.Colorbar = gobjects(1); %cb
 GphUsrInterface.Ucs = gobjects(1);
 GphUsrInterface.Menu = [];
 GphUsrInterface.ToolBar = gobjects(1);
+GphUsrInterface.Settings.FaceAlpha = 0.5;
 
 global FileManager
 FileManager.CurrentFile.Name = 0;

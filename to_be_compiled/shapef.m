@@ -1,10 +1,12 @@
-function [defmat,uvwtab,maxd]=shapef(xx,res,scala)
+function Deform=ShapeF(xx,res,scala)
 
 % global variables
 global Li Ri d_sca
-global xyztab L index ne dtab
-uvwtab=xx(dtab);
-maxd=zeros(1,13);
+global Mesh
+global Constraints
+
+Deform.uvwtab=xx(Constraints.Dtab);
+Deform.maxd=zeros(1,13);
 
 % DEFMAT is a cell matrix of double matrices containings the global
 % coordinates of each deformed element SCALED
@@ -14,12 +16,12 @@ maxd=zeros(1,13);
 
 % MAXD maximum total arrow displacement of the structure NOT SCALED
 
-Emat=zeros(ne,12);
-for i=1:ne
-    Emat(i,:)=[uvwtab(index(i,2),:) uvwtab(index(i,3),:)]*Li(:,:,i).';
+Emat=zeros(Mesh.Numbers.Elements,12);
+for i=1:Mesh.Numbers.Elements
+    Emat(i,:)=[Deform.uvwtab(Mesh.Element(i).Index(2),:) Deform.uvwtab(Mesh.Element(i).Index(3),:)]*Li(:,:,i).';
 end
 Emat(:,[5 11])=-Emat(:,[5 11]);
-defmat=cell(ne,1);
+Deform.defmat=cell(Mesh.Numbers.Elements,1);
 if nargin==2
     scala=0;
 elseif nargin==1
@@ -27,22 +29,22 @@ elseif nargin==1
     res=0;
 end
 if scala==0
-    scala=sqrt(sum((max(xyztab(:,2:4))-min(xyztab(:,2:4))).^2))/norm(xx,Inf)/5;
+    scala=sqrt(sum((max(Mesh.Nodes.Tab(:,2:4))-min(Mesh.Nodes.Tab(:,2:4))).^2))/norm(xx,Inf)/5;
     if scala==Inf, scala=1; end
 end
 if res==0
     res=2e-2*d_sca;
 end
-for i=1:ne
-    pN=floor(L(i)/res)+1; if pN<2, pN=2; end
-    ll=linspace(0,L(i),pN);
+for i=1:Mesh.Numbers.Elements
+    pN=floor(Mesh.Element(i).Length/res)+1; if pN<2, pN=2; end
+    ll=linspace(0,Mesh.Element(i).Length,pN);
     A=zeros(pN,3); F=zeros(pN,3);
-    A(:,1)=interp1([0 L(i)],Emat(i,[1 7]),ll);
-    A(:,2)=spline([0 L(i)],Emat(i,[6 2 8 12]),ll);
-    A(:,3)=spline([0 L(i)],Emat(i,[5 3 9 11]),ll);
-    F(:,1)=interp1([0 L(i)],Emat(i,[4 10]),ll);
-    pp2=spline([0 L(i)],Emat(i,[6 2 8 12]));
-    pp3=spline([0 L(i)],Emat(i,[5 3 9 11]));
+    A(:,1)=interp1([0 Mesh.Element(i).Length],Emat(i,[1 7]),ll);
+    A(:,2)=spline([0 Mesh.Element(i).Length],Emat(i,[6 2 8 12]),ll);
+    A(:,3)=spline([0 Mesh.Element(i).Length],Emat(i,[5 3 9 11]),ll);
+    F(:,1)=interp1([0 Mesh.Element(i).Length],Emat(i,[4 10]),ll);
+    pp2=spline([0 Mesh.Element(i).Length],Emat(i,[6 2 8 12]));
+    pp3=spline([0 Mesh.Element(i).Length],Emat(i,[5 3 9 11]));
     pp2.coefs=[pp2.coefs(1)*3  pp2.coefs(2)*2 pp2.coefs(3)]; pp2.order=pp2.order-1;
     pp3.coefs=[pp3.coefs(1)*3  pp3.coefs(2)*2 pp3.coefs(3)]; pp3.order=pp3.order-1;
     F(:,2)=ppval(pp3,ll);
@@ -50,7 +52,7 @@ for i=1:ne
     R=F*Ri(:,:,i);
     D=A*Ri(:,:,i);
     C=sqrt(sum(A.^2,2)); A=[A C D A R F]; 
-    defmat(i)={A};
+    Deform.defmat(i)={A};
     if max(C)>maxd(1), maxd(1)=max(C); end
     if max(abs(D(:,1)))>maxd(2), maxd(2)=max(abs(D(:,1))); end
     if max(abs(D(:,2)))>maxd(3), maxd(3)=max(abs(D(:,2))); end
@@ -66,19 +68,19 @@ for i=1:ne
     if max(abs(F(:,3)))>maxd(13), maxd(13)=max(abs(F(:,3))); end
 end
 for i=1:13
-    if maxd(i)==0, maxd(i)=1; end
+    if Deform.maxd(i)==0, Deform.maxd(i)=1; end
 end
-scala=scala/maxd(1);
-for i=1:ne  
-    pN=floor(L(i)/res)+1;
+scala=scala/Deform.maxd(1);
+for i=1:Mesh.Numbers.Elements  
+    pN=floor(Mesh.Element(i).Length/res)+1;
     if pN<2
         pN=2;
     end
-    ll=linspace(0,L(i),pN);
-    A=cell2mat(defmat(i));
+    ll=linspace(0,Mesh.Element(i).Length,pN);
+    A=cell2mat(Deform.defmat(i));
     A(:,1:3)=A(:,1:3)*scala;
     A(:,1)=A(:,1)+ll.';
-    A(:,1:3)=xyztab(index(i,2),2:4)+A(:,1:3)*Ri(:,:,i);
+    A(:,1:3)=Mesh.Nodes.Tab(Mesh.Element(i).Index(2),2:4)+A(:,1:3)*Ri(:,:,i);
     A=[A; flipud(A)];
-    defmat(i)={A};
+    Deform.defmat(i)={A};
 end

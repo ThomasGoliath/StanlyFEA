@@ -1,6 +1,6 @@
 function readstr(fid)
-global index bush
-global dtab axx incl
+global index
+global Constraints
 global xyztab d_sca
 global material notch
 global sections
@@ -17,7 +17,7 @@ end
 ctrl=1;
 while ~strcmp(string,'*end')
     if nn>0&&ctrl
-        dtab=zeros(nn,6); ctrl=0;
+        Constraints.Dtab=zeros(nn,6); ctrl=0;
     end
     string=fgetl(fid);
     %% MESH
@@ -169,14 +169,14 @@ while ~strcmp(string,'*end')
 					gcon_err_ctrl(rec,nl)
                     for i=1:6
                         if rec(i+1)==Inf
-                            dtab(rec(1),i)=-1;
+                            Constraints.Dtab(rec(1),i)=-1;
                         elseif rec(i+1)~=0
                             Kcorr=[Kcorr; rec(1) i rec(i+1)];
                         end
                     end
                     if length(rec)>7
                         if sum(rec(8:9)~=0)
-                            incl=[incl; rec([1 8 9])];
+                            Constraints.Incl=[Constraints.Incl; rec([1 8 9])];
                         end
                     end
                 end
@@ -197,9 +197,9 @@ while ~strcmp(string,'*end')
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
                     rec=str2num(string);
                     icon_err_ctrl(rec,nl)
-                    axx=[axx; rec];
+                    Constraints.Enslavements=[Constraints.Enslavements; rec];
                     rec([false false rec(3:8)<Inf])=0; rec(rec==Inf)=1;
-                    dtab(rec(2),:)=rec(3:8)*rec(1);
+                    Constraints.Dtab(rec(2),:)=rec(3:8)*rec(1);
                 end
             end
         end
@@ -220,7 +220,7 @@ while ~strcmp(string,'*end')
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
                     rec=str2num(string);
                     ycon_err_ctrl(rec,nl)
-                    bush=[bush; rec];
+                    Constraints.Bushing=[Constraints.Bushing; rec];
                 end
             end
         end
@@ -378,20 +378,20 @@ if ~isempty(Qtab)
     distrol_corr;
 end
 
-% dtab construction
+% Constraints.Dtab construction
 status_info('[ReadStructure] Building DoFs martrix')
-ndof=sum(sum(dtab==0));
+ndof=sum(sum(Constraints.Dtab==0));
 ndob=nn*6-ndof;
-dtab=dtab.';
-dtab((dtab==-1))=(ndof+1):(ndof+sum(sum(dtab==-1)));
-dtab((dtab==0))=1:ndof;
-dtab=dtab.';
-if ~isempty(axx)
+Constraints.Dtab=Constraints.Dtab.';
+Constraints.Dtab((Constraints.Dtab==-1))=(ndof+1):(ndof+sum(sum(Constraints.Dtab==-1)));
+Constraints.Dtab((Constraints.Dtab==0))=1:ndof;
+Constraints.Dtab=Constraints.Dtab.';
+if ~isempty(Constraints.Enslavements)
     status_info('[ReadStructure] Enslavements correction')
-    for i=1:size(axx,1)
+    for i=1:size(Constraints.Enslavements,1)
         for j=3:8
-            if axx(i,j)==Inf
-                dtab(axx(i,2),j-2)=dtab(axx(i,1),j-2);
+            if Constraints.Enslavements(i,j)==Inf
+                Constraints.Dtab(Constraints.Enslavements(i,2),j-2)=Constraints.Dtab(Constraints.Enslavements(i,1),j-2);
             end
         end
     end

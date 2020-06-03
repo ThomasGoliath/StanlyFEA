@@ -57,5 +57,11 @@ Solver.xf =[];
 Solver.xb =[];
 
 global Output
-Output.InternalForces.Gph.FaceAlpha = 0.5;
-Output.InternalForces.Tab = [];
+Output.InternalForces = [];
+Output.Stress.Nom = [];
+Output.Stress.Max = [];
+Output.Strain.Nom = [];
+Output.Strain.Max = [];
+Output.Deform.uvwtab = [];
+Output.Deform.defmat = [];
+Output.Deform.maxd = [];

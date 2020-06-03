@@ -1,5 +1,5 @@
 % Solver
-function report = SolverStatic
+function report = SolverStatic(stanFlag)
 
 global FileManager
 
@@ -119,49 +119,47 @@ try
     end
     
     %%% Stress and strain
-    defsca=6/60*d_sca;
-    if stan_flag
-        status_info('Computing displacements')
-        [defmat,uvwtab,maxd]=shapef(xx,pnres,defsca);
+    if stanFlag
+        LogMsg('Computing displacements')
+        Output.Deform = ShapeF(Solver.x,pnres,6/60*d_sca); %[defmat,uvwtab,maxd]
     end
-    status_info('Computing stresses')
-    if filetype==1&&sum(sum(notch(:,2:end)~=1))
-        [SS,SSnom]=stresses(InternalForces);
-        if stan_flag
-            status_info('Computing strains')
-            [EE,EEnom]=strains(SS,SSnom);
+    LogMsg('Computing stresses')
+    if FileManager.CurrentFile.FileType==1 && sum(sum(Properties.Notches(:,2:end)~=1))
+        Output.Stress=Stresses(Output.InternalForces);
+        if stanFlag
+            LogMsg('Computing strains')
+            Output.Strain=Hooke(Output.Stress);
         end
     else
         SS=stresses(InternalForces);
         if stan_flag
-            status_info('Computing strains')
-            EE=strains(SS);
+            LogMsg('Computing strains')
+            Output.Strain=Hooke(Output.Stress);
         end
-        SSnom=SS; if stan_flag, EEnom=EE; end
     end
     
     %% Assessment
-    if stan_flag
-        status_info('Computing safety factors')
-        if filetype==1
+    if stanFlag
+        LogMsg('Computing safety factors')
+        if FileManager.CurrentFile.FileType==1
             keta=[0 5];
-            eta=zeros(size(SS,1),keta(2)*2);
+            Output.Eta=zeros(size(Output.Stress,1),keta(2)*2);
         else
             keta=[0 7];
-            eta=zeros(size(SS,1),keta(2)*2);
+            Output.Eta=zeros(size(Output.Stress,1),keta(2)*2);
         end
-        for i=1:ne
-            ys=material(index(i,5),6);
-            uts=material(index(i,5),7);
-            eta(i,1+keta)=ys./SS(i,[5 13]); %mises 1st y
-            eta(i,2+keta)=ys./SS(i,[6 14]); %tresca 1st y
-            eta(i,3+keta)=ys./SSnom(i,[5 13]); %mises fail
-            eta(i,4+keta)=ys./SSnom(i,[6 14]); %tresca fail
-            gr=[max(abs(SS(i,[3 4]))) max(abs(SS(i,[11 12])))];
-            eta(i,5+keta)=uts./gr; %galileo
+        for i=1:Mesh.Numbers.Elements
+            ys=Properties.Material(Mesh.Element(i).Index(5),6);
+            uts=Properties.Material(Mesh.Element(i).Index(5),7);
+            Output.Eta(i,1+keta)=ys./Output.Stress.Max(i,[5 13]); %mises 1st y
+            Output.Eta(i,2+keta)=ys./Output.Stress.Max(i,[6 14]); %tresca 1st y
+            Output.Eta(i,3+keta)=ys./Output.Stress.Nom(i,[5 13]); %mises fail
+            Output.Eta(i,4+keta)=ys./Output.Stress.Nom(i,[6 14]); %tresca fail
+            gr=[max(abs(Output.Stress.Max(i,[3 4]))) max(abs(Output.Stress.Max(i,[11 12])))];
+            Output.Eta(i,5+keta)=uts./gr; %galileo
         end
-        eta(eta==Inf)=-ones(size(eta(eta==Inf)));
-        eta(eta<0)=max(max(eta))*ones(size(eta(eta<0)));
+        Output.Eta(Output.Eta==Inf)=-ones(size(Output.Eta(Output.Eta==Inf)));
+        Output.Eta(Output.Eta<0)=max(max(Output.Eta))*ones(size(Output.Eta(Output.Eta<0)));
     end
     LogMsg(sprintf('Structure loaded successfully in %f seconds',toc))
     

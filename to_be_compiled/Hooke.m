@@ -1,5 +1,7 @@
-function [E,Enom]=strains(S,Snom)
+function Strain=Hooke(Stress)
 global material ne index
+S = Stress.Max;
+Snom = Stress.Nom;
 E=zeros(ne,12);
 Enom=zeros(ne,12);
 for i=1:ne
@@ -28,4 +30,8 @@ for i=1:ne
         Enom(i,[5 11])=[trace(ten1) trace(ten2)];
         Enom(i,[6 12])=[det(ten1) det(ten2)];
     end
+    
+    Strain.Nom = Enom;
+    Strain.Max = E;
+    
 end
