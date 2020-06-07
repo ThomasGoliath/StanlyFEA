@@ -1,44 +1,42 @@
 function glob_err_ctrl
-global index bush
-global dtab
-global xyztab nn ne
-global material
-global sections
-global Ftab Ttab Qtab
-global springs
-global filetype
+global FileManager
+global Loads
+global Properties
+global Mesh
+global Constraints
 
-status_info('Checking global variables file')
+LogMsg('Checking global variables file')
 
-if ~sum(sum(dtab~=0))
-    error('Not constrained structure')
+if ~sum(sum(Constraints.Dtab~=0))
+    ErrorManager('Not constrained structure')
 end
 
 %% MESH
-if isempty(xyztab)
-    error('No nodes ==> no structure')
+if isempty(Mesh.Nodes.Tab)
+    ErrorManager('No nodes ==> no structure')
 end
-if isempty(index)
-    error('No elements ==> no structure')
+if isempty(Mesh.Element)
+    ErrorManager('No elements ==> no structure')
 end
 
 
 %% PROPERTIES
-for i=1:ne
-    if max(index(i,5))>size(material,1)
-        error('element %i: No material correspondance inside index matrix',i)
+for i=1:Mesh.Numbers.Elements
+    if max(Mesh.Element(i).Index(5))>size(Properties.Materials,1)
+        ErrorManager(sprintf('element %i: No material correspondance inside index matrix',i))
     end
-    if max(index(i,4))>size(sections,1)
-        error('element %i: No section correspondance inside index matrix',i)
-    end
-end
-for i=1:size(material,1)
-    if ~sum(index(:,5)==material(i,1))
-        warning('Material %i property is unused',i)
+    if max(Mesh.Element(i).Index(4))>size(Properties.Sections,1)
+        ErrorManager(sprintf('element %i: No section correspondance inside index matrix',i))
     end
 end
-for i=1:size(sections,1)
-    if ~sum(index(:,4)==sections(i,1))
-        warning('Section %i property is unused',i)
-    end
+% TODO ripristinare warnings
+for i=1:size(Properties.Materials,1)
+%     if ~sum(index(:,5)==Properties.Materials(i,1))
+%         WarningManager(sprintf('Material %i property is unused',i))
+%     end
+end
+for i=1:size(Properties.Sections,1)
+%     if ~sum(index(:,4)==Properties.Sections(i,1))
+%         WarningManager(sprintf('Section %i property is unused',i))
+%     end
 end
