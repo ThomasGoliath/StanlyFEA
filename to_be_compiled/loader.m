@@ -10,13 +10,13 @@ FileManager.PreviousFile = FileManager.CurrentFile;
 stan_flag=1;
 % User sceglie il file da aprire
 [FileManager.CurrentFile.Name,FileManager.CurrentFile.Path,...
-    FileManager.CurrentFile.Filetype]...
+    FileManager.CurrentFile.FileType]...
     = uigetfile(FileManager.FileTypes.EnabledList,...
     'Select STAN input file',FileManager.DefaultPath);
 
 if FileManager.CurrentFile.Name~=0
     
-    switch FileManager.CurrentFile.Filetype
+    switch FileManager.CurrentFile.FileType
         
         % (.stan) STATIC ANALYSIS
         case 1            

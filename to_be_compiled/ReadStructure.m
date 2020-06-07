@@ -15,7 +15,7 @@ end
 ctrl=1;
 while ~strcmp(string,'*end')
     if Mesh.Numbers.Nodes>0&&ctrl
-        Constraints.Dtab=zeros(nn,6); ctrl=0;
+        Constraints.Dtab=zeros(Mesh.Numbers.Nodes,6); ctrl=0;
     end
     string=fgetl(fid);
     %% MESH
@@ -32,7 +32,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-					rec=str2double(string);
+					rec=str2num(string);
 					node_err_ctrl(rec,nl)
                     Mesh.Nodes.Tab = [Mesh.Nodes.Tab; rec];
                 end
@@ -50,7 +50,6 @@ while ~strcmp(string,'*end')
         elem_counter = 0;
         while ~strcmp(string,'}')
 		nl=nl+1;
-        elem_counter = elem_counter + 1;
             string=fgetl(fid);
             k=find(string=='%');
             if ~isempty(k)
@@ -58,7 +57,8 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-					rec=str2double(string);
+                    elem_counter = elem_counter + 1;
+					rec=str2num(string);
 					elem_err_ctrl(rec,nl)
                     Mesh.Element(elem_counter).Index = rec;
                 end
@@ -81,7 +81,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-					rec=str2double(string);
+					rec=str2num(string);
 					spri_err_ctrl(rec,nl)
                     Mesh.Springs.Tab=[Mesh.Springs.Tab; rec];
                 end
@@ -102,7 +102,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-                    rec=str2double(string);
+                    rec=str2num(string);
 					notc_err_ctrl(rec,nl)
                     Properties.Notches(rec(1),:)=rec;
                 end
@@ -123,7 +123,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-					rec=str2double(string);
+					rec=str2num(string);
 					sect_err_ctrl(rec,nl)
                     Properties.Sections=[Properties.Sections; rec];
                 end
@@ -144,7 +144,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-					rec=str2double(string);
+					rec=str2num(string);
 					mate_err_ctrl(rec,nl)
                     Properties.Materials=[Properties.Materials; rec];
                 end
@@ -166,7 +166,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-                    rec=str2double(string);
+                    rec=str2num(string);
 					gcon_err_ctrl(rec,nl)
                     for i=1:6
                         if rec(i+1)==Inf
@@ -196,9 +196,9 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-                    rec=str2double(string);
+                    rec=str2num(string);
                     icon_err_ctrl(rec,nl)
-                    Constraints.Enslavements=[Constraints.Enslavements; rec];
+                    Constraints.Ensl=[Constraints.Ensl; rec];
                     rec([false false rec(3:8)<Inf])=0; rec(rec==Inf)=1;
                     Constraints.Dtab(rec(2),:)=rec(3:8)*rec(1);
                 end
@@ -219,7 +219,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-                    rec=str2double(string);
+                    rec=str2num(string);
                     ycon_err_ctrl(rec,nl)
                     Constraints.Bushing=[Constraints.Bushing; rec];
                 end
@@ -241,7 +241,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-                    rec=str2double(string);
+                    rec=str2num(string);
                     nloa_err_ctrl(rec,nl)
                     Loads.Nodal=[Loads.Nodal; rec];
                 end
@@ -262,7 +262,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-                    rec=str2double(string);
+                    rec=str2num(string);
                     tloa_err_ctrl(rec,nl)
                     Loads.Thermal=[Loads.Thermal; rec];
                 end
@@ -283,7 +283,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-					rec=str2double(string);
+					rec=str2num(string);
                     dloa_err_ctrl(rec,nl)
                     Loads.Elemental=[Loads.Elemental; rec];
                 end
@@ -304,7 +304,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-                    rec=str2double(string);
+                    rec=str2num(string);
                     mesh_err_ctrl(rec,nl)
 					if ~isempty(Loads.Elemental), old_q=Loads.Elemental(:,1); else, old_q=[]; end
                     if ~sum(old_q==rec(1))
@@ -328,7 +328,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')&&gg
-                    rec=str2double(string);
+                    rec=str2num(string);
                     grav_err_ctrl(rec,nl,G)
                     G=[G; rec];
                     gg=0;
@@ -383,12 +383,12 @@ Constraints.Dtab=Constraints.Dtab.';
 Constraints.Dtab((Constraints.Dtab==-1))=(Mesh.Numbers.Dofs+1):(Mesh.Numbers.Dofs+sum(sum(Constraints.Dtab==-1)));
 Constraints.Dtab((Constraints.Dtab==0))=1:Mesh.Numbers.Dofs;
 Constraints.Dtab=Constraints.Dtab.';
-if ~isempty(Constraints.Enslavements)
+if ~isempty(Constraints.Ensl)
     LogMsg('[ReadStructure] Enslavements correction')
-    for i=1:size(Constraints.Enslavements,1)
+    for i=1:size(Constraints.Ensl,1)
         for j=3:8
-            if Constraints.Enslavements(i,j)==Inf
-                Constraints.Dtab(Constraints.Enslavements(i,2),j-2)=Constraints.Dtab(Constraints.Enslavements(i,1),j-2);
+            if Constraints.Ensl(i,j)==Inf
+                Constraints.Dtab(Constraints.Ensl(i,2),j-2)=Constraints.Dtab(Constraints.Ensl(i,1),j-2);
             end
         end
     end

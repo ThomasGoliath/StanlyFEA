@@ -2,6 +2,7 @@
 function report = SolverStatic(stanFlag)
 
 global FileManager
+global GphUsrInterface
 
 global Mesh
 global Properties
@@ -25,8 +26,8 @@ fclose(finp);
 % Try to compose the Matrix
 try
     %%% Reazioni ai vincoli
-    if ~isempty(axx)
-        TrueDobs = Mesh.Numbers.Dobs - sum(sum(axx(:,3:8)==Inf));
+    if ~isempty(Constraints.Ensl)
+        TrueDobs = Mesh.Numbers.Dobs - sum(sum(Constraints.Ensl(:,3:8)==Inf));
     else
         TrueDobs = Mesh.Numbers.Dobs;
     end
@@ -35,7 +36,7 @@ try
     bb=Mesh.Numbers.Dofs+(1:TrueDobs);
     % Assemblo le matrici
     LogMsg('Global system assembly')
-    [~,Solver.K,Solver.F,~,Solver.Ki]=Assembly; % TODO Assembly Review
+    [~,Solver.K,Solver.F,~,Solver.Ki]=Assembly;
     ExtLoads=Solver.F(Constraints.Dtab);   
     OnConstLoads = Solver.F;
     OnConstLoads(bb)=zeros(size(Solver.F(bb)));
@@ -51,14 +52,14 @@ try
         zeros(size(OnConstLoadTh(Constraints.Dtab <= Mesh.Numbers.Dofs)));
     
     % Vincoli elastici
-    if ~isempty(bush)
+    if ~isempty(Constraints.Bushing)
         LogMsg('Bushing correction')
         CorrectionBushing; % TODO Bushing Correction [K,F]=(K,F);
     end    
     TabLoad=Solver.F(Constraints.Dtab);  
     
     % Vincoli Inclinati (1)
-    if ~isempty(incl)
+    if ~isempty(Constraints.Incl)
         LogMsg('Inclined constraints correction (K,F)')
         CorrectionInclConst(1);
     end
@@ -165,9 +166,11 @@ try
     
 catch ME
     % Clean GUI
-    cla(GphUsrInterface.Axes);
+    if ishandle(GphUsrInterface.Axes)
+        cla(GphUsrInterface.Axes);
+    end
     FixMenu(false)
-    meshstr(GUI)
+    meshstr()
     % Notify error
     ErrorManager('Operation Failed: see message error',ME)
     errordlg('Not able to solve the structure. Check the mesh and correct mistakes.')

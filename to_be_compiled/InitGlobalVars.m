@@ -7,8 +7,8 @@ Mesh.Numbers.Dobs = 0; %ndob
 Mesh.Numbers.Nodes = 0; %nn
 Mesh.Numbers.Elements = 0; %ne
 % Elements
-Mesh.Element.Index = 0; % index
-Mesh.Element.Length = 0; % L
+Mesh.Element.Index = []; % index
+Mesh.Element.Length = []; % L
 Mesh.Element.SphAng = [0 0 0]; % ang
 Mesh.Element.Loc2Glob = zeros(12); %Li
 Mesh.Element.Rotated = zeros(3); %Ri
@@ -30,7 +30,9 @@ Loads.Thermal = []; %Ttab
 global Constraints
 Constraints.Dtab = []; %dtab
 Constraints.Bushing = []; %bush
+Constraints.Ensl = [];
 Constraints.Kcorr = []; %Kcorr
+Constraints.Incl = []; %Incl
 
 global Solver
 Solver.M = [];

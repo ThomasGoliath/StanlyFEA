@@ -15,8 +15,14 @@ end
 if sum(isnan(a))||sum(isinf(a))
 	ErrorManager('elements (line %i): not valid value',nl)
 end
-if a(1)~=size(Mesh.Element,1)+1
-	ErrorManager('elements (line %i): not valid element ID',nl)
+if length(Mesh.Element)==1 && numel(Mesh.Element(1).Index)==0
+    if a(1)~=1
+        ErrorManager('elements (line %i): not valid element ID',nl)
+    end
+else
+    if a(1)~=length(Mesh.Element)+1
+        ErrorManager('elements (line %i): not valid element ID',nl)
+    end
 end
 if (a(2)<1||floor(a(2))~=a(2)||a(2)>Mesh.Numbers.Nodes)||(a(3)<1||floor(a(3))~=a(3)||a(3)>Mesh.Numbers.Nodes)
 	ErrorManager('elements (line %i): not valid node ID',nl)
