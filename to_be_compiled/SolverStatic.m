@@ -18,7 +18,7 @@ LogMsg('Building global variables')
 InitGlobalVars
 % Read Structure File
 finp=fopen([FileManager.CurrentFile.Path FileManager.CurrentFile.Name],'r');
-LogMsg(sprintf('Loading file: %s',fname))
+LogMsg(sprintf('Loading file: %s',[FileManager.CurrentFile.Path FileManager.CurrentFile.Name]))
 ReadStructure(finp); % TODO ReadStructure Review
 fclose(finp);
 

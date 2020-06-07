@@ -1,4 +1,4 @@
-function InitGlobalVars
+%%% InitGlobalVars
 
 global Mesh
 % General mesh info
@@ -9,11 +9,12 @@ Mesh.Numbers.Elements = 0; %ne
 % Elements
 Mesh.Element.Index = 0; % index
 Mesh.Element.Length = 0; % L
-Mesh.Element.SphAng = [0 0]; % ang
+Mesh.Element.SphAng = [0 0 0]; % ang
 Mesh.Element.Loc2Glob = zeros(12); %Li
-Mesh.Element.Rotated = zeros(3); %Li
+Mesh.Element.Rotated = zeros(3); %Ri
 % Nodes
 Mesh.Nodes.Tab = [];  % xyztab
+Mesh.Nodes.Ensl = []; % axx
 Mesh.Springs.Tab = []; % springs
 
 global Properties
@@ -29,6 +30,7 @@ Loads.Thermal = []; %Ttab
 global Constraints
 Constraints.Dtab = []; %dtab
 Constraints.Bushing = []; %bush
+Constraints.Kcorr = []; %Kcorr
 
 global Solver
 Solver.M = [];

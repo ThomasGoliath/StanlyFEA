@@ -1,5 +1,7 @@
 function ycon_err_ctrl(a,nl)
 global nn dtab
+global Mesh
+global Constraints
 if nn==0
     error('nodes must be before yielding constraints')
 end

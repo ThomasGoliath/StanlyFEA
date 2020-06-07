@@ -1,14 +1,12 @@
-function readstr(fid)
-global index
+function ReadStructure(fid)
+
+global Mesh
 global Constraints
-global xyztab d_sca
-global material notch
-global sections
-global Ftab L ang Ttab Qtab
-global nn ne ndob ndof
-global Kcorr springs
-global Li Ri
-global filetype
+global Loads
+global Properties
+global FileManager
+
+global d_sca
 G=[]; clstart=0;
 string=fgetl(fid);
 while ~strcmp(string,'*start')
@@ -16,14 +14,14 @@ while ~strcmp(string,'*start')
 end
 ctrl=1;
 while ~strcmp(string,'*end')
-    if nn>0&&ctrl
+    if Mesh.Numbers.Nodes>0&&ctrl
         Constraints.Dtab=zeros(nn,6); ctrl=0;
     end
     string=fgetl(fid);
     %% MESH
     % Nodes global coordinates matrix
     if strcmp(string,'nodes {')
-        status_info('[ReadStructure] Reading "nodes" block')
+        LogMsg('[ReadStructure] Reading "nodes" block')
 		nl=clstart;
         while ~strcmp(string,'}')
 		nl=nl+1;
@@ -34,22 +32,25 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-					rec=str2num(string);
+					rec=str2double(string);
 					node_err_ctrl(rec,nl)
-                    xyztab=[xyztab; rec];
+                    Mesh.Nodes.Tab = [Mesh.Nodes.Tab; rec];
                 end
             end
         end
-        nn=size(xyztab,1);
-        notch=[(1:nn).' ones(nn,3)];
+        Mesh.Numbers.Nodes=size(Mesh.Nodes.Tab,1);
+        % Init roperties notches tab
+        Properties.Notches=[(1:Mesh.Numbers.Nodes).' ones(Mesh.Numbers.Nodes,3)];
     end
     
     % Element index matrix
     if strcmp(string,'elements {')
-        status_info('[ReadStructure] Reading "index" block')
+        LogMsg('[ReadStructure] Reading "index" block')
         nl=clstart;
+        elem_counter = 0;
         while ~strcmp(string,'}')
 		nl=nl+1;
+        elem_counter = elem_counter + 1;
             string=fgetl(fid);
             k=find(string=='%');
             if ~isempty(k)
@@ -57,19 +58,19 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-					rec=str2num(string);
+					rec=str2double(string);
 					elem_err_ctrl(rec,nl)
-                    index=[index; rec];
+                    Mesh.Element(elem_counter).Index = rec;
                 end
             end
         end
-        ne=size(index,1);
+        Mesh.Numbers.Elements=elem_counter;
     end
 
     
     % Spring index matrix
     if strcmp(string,'springs {')
-        status_info('[ReadStructure] Reading "springs" block')
+        LogMsg('[ReadStructure] Reading "springs" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -80,9 +81,9 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-					rec=str2num(string);
+					rec=str2double(string);
 					spri_err_ctrl(rec,nl)
-                    springs=[springs; rec];
+                    Mesh.Springs.Tab=[Mesh.Springs.Tab; rec];
                 end
             end
         end
@@ -90,7 +91,7 @@ while ~strcmp(string,'*end')
     
     % Notch matrix
     if strcmp(string,'notches {')
-        status_info('[ReadStructure] Reading "notches" block')
+        LogMsg('[ReadStructure] Reading "notches" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -101,9 +102,9 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-                    rec=str2num(string);
+                    rec=str2double(string);
 					notc_err_ctrl(rec,nl)
-                    notch(rec(1),:)=rec;
+                    Properties.Notches(rec(1),:)=rec;
                 end
             end
         end
@@ -111,7 +112,7 @@ while ~strcmp(string,'*end')
     
     % Table of sections properties
     if strcmp(string,'sections {')
-        status_info('[ReadStructure] Reading "sections" block')
+        LogMsg('[ReadStructure] Reading "sections" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -122,9 +123,9 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-					rec=str2num(string);
+					rec=str2double(string);
 					sect_err_ctrl(rec,nl)
-                    sections=[sections; rec];
+                    Properties.Sections=[Properties.Sections; rec];
                 end
             end
         end
@@ -132,7 +133,7 @@ while ~strcmp(string,'*end')
     
     % Table of material properties
     if strcmp(string,'materials {')
-        status_info('[ReadStructure] Reading "materials" block')
+        LogMsg('[ReadStructure] Reading "materials" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -143,9 +144,9 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-					rec=str2num(string);
+					rec=str2double(string);
 					mate_err_ctrl(rec,nl)
-                    material=[material; rec];
+                    Properties.Materials=[Properties.Materials; rec];
                 end
             end
         end
@@ -154,7 +155,7 @@ while ~strcmp(string,'*end')
     %% CONSTRAINTS
     % DOF matrix
     if strcmp(string,'ground constraints {')
-        status_info('[ReadStructure] Reading "ground constraints" block')
+        LogMsg('[ReadStructure] Reading "ground constraints" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -165,13 +166,13 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-                    rec=str2num(string);
+                    rec=str2double(string);
 					gcon_err_ctrl(rec,nl)
                     for i=1:6
                         if rec(i+1)==Inf
                             Constraints.Dtab(rec(1),i)=-1;
                         elseif rec(i+1)~=0
-                            Kcorr=[Kcorr; rec(1) i rec(i+1)];
+                            Constraints.Kcorr=[Constraints.Kcorr; rec(1) i rec(i+1)];
                         end
                     end
                     if length(rec)>7
@@ -184,7 +185,7 @@ while ~strcmp(string,'*end')
         end
     end
     if strcmp(string,'internal constraints {')
-        status_info('[ReadStructure] Reading "internal constraints" block')
+        LogMsg('[ReadStructure] Reading "internal constraints" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -195,7 +196,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-                    rec=str2num(string);
+                    rec=str2double(string);
                     icon_err_ctrl(rec,nl)
                     Constraints.Enslavements=[Constraints.Enslavements; rec];
                     rec([false false rec(3:8)<Inf])=0; rec(rec==Inf)=1;
@@ -207,7 +208,7 @@ while ~strcmp(string,'*end')
     
     % Yielded constraints matrix
     if strcmp(string,'yielded constraints {')
-        status_info('[ReadStructure] Reading "yielded constraints" block')
+        LogMsg('[ReadStructure] Reading "yielded constraints" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -218,7 +219,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-                    rec=str2num(string);
+                    rec=str2double(string);
                     ycon_err_ctrl(rec,nl)
                     Constraints.Bushing=[Constraints.Bushing; rec];
                 end
@@ -229,7 +230,7 @@ while ~strcmp(string,'*end')
     %% LOADS
     % Loads matrix
     if strcmp(string,'nodal loads {')
-        status_info('[ReadStructure] Reading "nodal loads" block')
+        LogMsg('[ReadStructure] Reading "nodal loads" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -240,9 +241,9 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-                    rec=str2num(string);
+                    rec=str2double(string);
                     nloa_err_ctrl(rec,nl)
-                    Ftab=[Ftab; rec];
+                    Loads.Nodal=[Loads.Nodal; rec];
                 end
             end
         end
@@ -250,7 +251,7 @@ while ~strcmp(string,'*end')
     
     % Thermal variations matrix
     if strcmp(string,'thermal variations {')
-        status_info('[ReadStructure] Reading "thermal variations" block')
+        LogMsg('[ReadStructure] Reading "thermal variations" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -261,9 +262,9 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-                    rec=str2num(string);
+                    rec=str2double(string);
                     tloa_err_ctrl(rec,nl)
-                    Ttab=[Ttab; rec];
+                    Loads.Thermal=[Loads.Thermal; rec];
                 end
             end
         end
@@ -271,7 +272,7 @@ while ~strcmp(string,'*end')
     
     % Distributed loads matrix
     if strcmp(string,'distributed loads {')
-        status_info('[ReadStructure] Reading "distributed loads" block')
+        LogMsg('[ReadStructure] Reading "distributed loads" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -282,9 +283,9 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-					rec=str2num(string);
+					rec=str2double(string);
                     dloa_err_ctrl(rec,nl)
-                    Qtab=[Qtab; rec];
+                    Loads.Elemental=[Loads.Elemental; rec];
                 end
             end
         end
@@ -292,7 +293,7 @@ while ~strcmp(string,'*end')
     
     % Mesh control
     if strcmp(string,'mesh control {')
-        status_info('[ReadStructure] Reading "mesh control" block')
+        LogMsg('[ReadStructure] Reading "mesh control" block')
         nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -303,11 +304,11 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')
-                    rec=str2num(string);
+                    rec=str2double(string);
                     mesh_err_ctrl(rec,nl)
-					if ~isempty(Qtab), old_q=Qtab(:,1); else, old_q=[]; end
+					if ~isempty(Loads.Elemental), old_q=Loads.Elemental(:,1); else, old_q=[]; end
                     if ~sum(old_q==rec(1))
-                        Qtab=[Qtab; rec(1) zeros(1,6) rec(end)];
+                        Loads.Elemental=[Loads.Elemental; rec(1) zeros(1,6) rec(end)];
                     end
                 end
             end
@@ -316,7 +317,7 @@ while ~strcmp(string,'*end')
     
     % Gravity
     if strcmp(string,'gravity {')
-        status_info('[ReadStructure] Reading "gravity" block')
+        LogMsg('[ReadStructure] Reading "gravity" block')
         gg=1; nl=clstart;
         while ~strcmp(string,'}')
             nl=nl+1;
@@ -327,7 +328,7 @@ while ~strcmp(string,'*end')
             end
             if ~isempty(string)
                 if ~strcmp(string(1),'%')&&~strcmp(string(1),'}')&&gg
-                    rec=str2num(string);
+                    rec=str2double(string);
                     grav_err_ctrl(rec,nl,G)
                     G=[G; rec];
                     gg=0;
@@ -339,55 +340,51 @@ end
 glob_err_ctrl
 
 % Length and angles
-status_info('[ReadStructure] Computing element length and orientation')
-L=zeros(ne,1); ang=zeros(ne,2);
-for i=1:size(index,1)
-    rel_coord=xyztab(index(i,3),2:4)-xyztab(index(i,2),2:4);
+LogMsg('[ReadStructure] Computing element length and orientation')
+for i=1:Mesh.Numbers.Elements
+    rel_coord=Mesh.Nodes.Tab(Mesh.Element(i).Index(3),2:4)-Mesh.Nodes.Tab(Mesh.Element(i).Index(2),2:4);
     sph_coord=cart2sph(rel_coord).';
-    L(i)=sph_coord(1);
-    ang(i,:)=sph_coord(2:3);
+    Mesh.Element(i).Length=sph_coord(1);
+    Mesh.Element(i).SphAng=[sph_coord(2:3) Mesh.Element(i).Index(end)*pi/180];
+    Mesh.Element(i).Index(end)=[];
 end
-ang=[ang index(:,end)*pi/180]; index(:,end)=[];
 
 % Local to global matrices
-status_info('[ReadStructure] Building local reference rotation matrices')
-Li=zeros(12,12,ne);
-Ri=zeros(3,3,ne);
-for i=1:ne
-    Ru=rotmat(-ang(i,3),1);
-    Ry=rotmat(-ang(i,2)+pi/2,2);
-    Rz=rotmat(-ang(i,1),3);
+LogMsg('[ReadStructure] Building local reference rotation matrices')
+for i=1:Mesh.Numbers.Elements
+    Ru=rotmat(-Mesh.Element(i).SphAng(3),1);
+    Ry=rotmat(-Mesh.Element(i).SphAng(2)+pi/2,2);
+    Rz=rotmat(-Mesh.Element(i).SphAng(1),3);
     R=Ru*Ry*Rz;
-    Ri(:,:,i)=R;
-    R=[R zeros(3,9); zeros(3) R zeros(3,6)
+    Mesh.Element(i).Rotated=R;
+    Mesh.Element(i).Loc2Glob=[R zeros(3,9); zeros(3) R zeros(3,6)
         zeros(3,6) R zeros(3);zeros(3,9) R];
-    Li(:,:,i)=R;
 end
 
 % Distributed loads and gravity correction
-d_sca=[max(xyztab(:,2))-min(xyztab(:,2))
-    max(xyztab(:,3))-min(xyztab(:,3))
-    max(xyztab(:,4))-min(xyztab(:,4))];
+d_sca=[max(Mesh.Nodes.Tab(:,2))-min(Mesh.Nodes.Tab(:,2))
+    max(Mesh.Nodes.Tab(:,3))-min(Mesh.Nodes.Tab(:,3))
+    max(Mesh.Nodes.Tab(:,4))-min(Mesh.Nodes.Tab(:,4))];
 d_sca=max(d_sca);
 if ~isempty(G)
-    status_info('[ReadStructure] Gravity correction')
+    LogMsg('[ReadStructure] Gravity correction')
     gravity(G);
 end
-if ~isempty(Qtab)
-    status_info('[ReadStructure] Distributed loads correction')
+if ~isempty(Loads.Elemental)
+    LogMsg('[ReadStructure] Distributed loads correction')
     distrol_corr;
 end
 
 % Constraints.Dtab construction
-status_info('[ReadStructure] Building DoFs martrix')
-ndof=sum(sum(Constraints.Dtab==0));
-ndob=nn*6-ndof;
+LogMsg('[ReadStructure] Building DoFs martrix')
+Mesh.Numbers.Dofs=sum(sum(Constraints.Dtab==0));
+Mesh.Numbers.Dobs=Mesh.Numbers.Nodes*6-Mesh.Numbers.Dofs;
 Constraints.Dtab=Constraints.Dtab.';
-Constraints.Dtab((Constraints.Dtab==-1))=(ndof+1):(ndof+sum(sum(Constraints.Dtab==-1)));
-Constraints.Dtab((Constraints.Dtab==0))=1:ndof;
+Constraints.Dtab((Constraints.Dtab==-1))=(Mesh.Numbers.Dofs+1):(Mesh.Numbers.Dofs+sum(sum(Constraints.Dtab==-1)));
+Constraints.Dtab((Constraints.Dtab==0))=1:Mesh.Numbers.Dofs;
 Constraints.Dtab=Constraints.Dtab.';
 if ~isempty(Constraints.Enslavements)
-    status_info('[ReadStructure] Enslavements correction')
+    LogMsg('[ReadStructure] Enslavements correction')
     for i=1:size(Constraints.Enslavements,1)
         for j=3:8
             if Constraints.Enslavements(i,j)==Inf
@@ -398,14 +395,14 @@ if ~isempty(Constraints.Enslavements)
 end
 
 % Spring matrix construction
-if ~isempty(springs)
-    status_info('[ReadStructure] Springs matrix construction')
+if ~isempty(Mesh.Springs.Tab)
+    LogMsg('[ReadStructure] Springs matrix construction')
 end
-springs=[springs zeros(size(springs,1),2)];
-for i=1:size(springs,1)
-    rel_coord=xyztab(springs(i,3),2:4)-xyztab(springs(i,2),2:4);
+Mesh.Springs.Tab=[Mesh.Springs.Tab zeros(size(Mesh.Springs.Tab,1),2)];
+for i=1:size(Mesh.Springs.Tab,1)
+    rel_coord=Mesh.Nodes.Tab(Mesh.Springs.Tab(i,3),2:4)-Mesh.Nodes.Tab(Mesh.Springs.Tab(i,2),2:4);
     sph_coord=cart2sph(rel_coord).';
-    springs(i,5:6)=sph_coord(2:3);
+    Mesh.Springs.Tab(i,5:6)=sph_coord(2:3);
 end
-status_info('[ReadStructure] Stop reading')
+LogMsg('[ReadStructure] Stop reading')
 end
