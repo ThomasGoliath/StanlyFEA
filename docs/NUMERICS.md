@@ -121,6 +121,15 @@ silently stabilized. Its original data are retained. Tests explicitly establish
 this mechanism from the model and element stiffness.
 
 The authoring workstation has Runtime v93 (R2017b), but no full MATLAB or Compiler
-executable. Active MATLAB sources passed MISS_HIT syntax/lint checks. MATLAB tests,
-desktop UI and Compiler builds still require native execution; static checks do
-not establish numerical compatibility or successful deployment.
+executable. Active MATLAB sources passed MISS_HIT syntax/lint checks. Native
+Windows execution was verified in [GitHub Actions](https://github.com/ThomasGoliath/StanlyFEA/actions/runs/41808902586)
+on 2026-11-04: **30 passed, zero failed or incomplete**, separately on R2024b and
+R2026b. This includes loading the desktop controller, preserving its prior result
+after failure, switching static/fatigue models, all plot choices and PNG export.
+The R2026b hosted runner reported unavailable graphics acceleration; the graphics
+tests still passed using the available rendering path.
+
+This does not validate the historical empirical fatigue method against a standard,
+every legacy numeric output, the complete interactive workflow, or a compiled
+Runtime installation. Compiler packaging and clean-machine deployment remain open
+checks in `DEPLOYMENT.md`.

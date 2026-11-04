@@ -11,7 +11,8 @@ MATLAB path or use its old launcher. Its name does not mean it is the build inpu
 ## Run in MATLAB
 
 Target baseline: MATLAB R2024b or newer, with no additional toolbox for analysis.
-This target is configured for CI; execution on these releases is pending validation.
+The 30 analytical, input/export and desktop smoke tests pass on Windows with
+MATLAB R2024b and R2026b. Other releases have not been tested.
 From the repository root:
 
 ```matlab
@@ -72,8 +73,8 @@ The old Inno Setup/Matlab-launcher installer on `master` is not used.
 
 See [deployment verification](docs/DEPLOYMENT.md) for the clean-machine procedure
 and [numerical methods and changes](docs/NUMERICS.md) before comparing results
-with the old program. Native execution and compilation have **not** been verified
-on the authoring workstation, which has Runtime but no full MATLAB.
+with the old program. Native analysis and desktop smoke tests are verified in CI;
+Compiler packaging and a clean-machine Runtime installation remain **unverified**.
 
 ## Tests
 
@@ -87,6 +88,10 @@ the branch is pushed. Tests include analytical solutions and the historical inpu
 examples recovered from `master`. A green CI result is required before merging;
 the GUI and deployed executable also require the manual checks in the deployment
 document. No changes are merged to `develop` by the refactoring branch.
+
+Verified run (2026-11-04): [30/30 tests on both R2024b and R2026b](https://github.com/ThomasGoliath/StanlyFEA/actions/runs/41808902586).
+Compiler is not included in automatic public-project CI licensing; building the
+installer requires a licensed development installation or a suitable batch token.
 
 ## Scope
 

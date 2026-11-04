@@ -28,8 +28,9 @@
    incompatible mean mesh, unstable supports and export-failure handling.
 
 Active source does not call Java, create registry associations or launch MATLAB.
-The legacy source directory is intentionally excluded from the build. The package
-has not yet passed this procedure; the branch is not Runtime-certified.
+The legacy source directory is intentionally excluded from the build. Automated
+native solver and desktop smoke tests pass on R2024b and R2026b. The compiled
+package has not passed this procedure; the branch is not Runtime-certified.
 
 ## Branch provenance
 
@@ -40,5 +41,8 @@ Obsolete branch tips recorded before the requested remote deletion:
 - `release/7.1.0`: `b9d5cdcff80c4137590745c5a47a54911cbdfe4e`
 - `feature/FirstRun`: `a5d004b8e9717915e6f5174bae06ed988cf423cb`
 
-These references record the starting state; they do not assert that publication
-or deletion succeeded. A local pre-refactoring bundle preserves their history.
+Both obsolete remote branches were deleted on 2026-11-04 after verifying these
+exact heads. The [one-time retirement run](https://github.com/ThomasGoliath/StanlyFEA/actions/runs/41808902947)
+succeeded; its privileged temporary workflow was then removed from the branch.
+`develop` and `master` were left unchanged. A verified pre-refactoring Git bundle
+preserves the deleted branch history for recovery.
