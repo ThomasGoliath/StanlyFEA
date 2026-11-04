@@ -199,10 +199,36 @@ function testSolveEveryHistoricalExample(testCase)
 files = [dir(fullfile(testCase.TestData.Root,'examples','*.stan')); ...
     dir(fullfile(testCase.TestData.Root,'examples','*.fstan'))];
 for i = 1:numel(files)
-    r = stanlyfea.analyze(fullfile(files(i).folder,files(i).name));
-    verifyTrue(testCase,all(isfinite(r.Displacements(:))),files(i).name);
-    verifyLessThan(testCase,r.Diagnostics.ConstraintResidual,1e-7,files(i).name);
+    filename = fullfile(files(i).folder,files(i).name);
+    if strcmp(files(i).name,'bridge3D_gravity.stan')
+        % Vertical member 6 can spin freely: its end Rz rotations are untied.
+        verifyError(testCase,@() stanlyfea.analyze(filename),'Stanly:UnstableModel');
+        continue
+    end
+    try
+        r = stanlyfea.analyze(filename);
+        verifyTrue(testCase,all(isfinite(r.Displacements(:))),files(i).name);
+        verifyLessThan(testCase,r.Diagnostics.ConstraintResidual,1e-7,files(i).name);
+    catch exception
+        verifyFail(testCase,sprintf('%s: %s',files(i).name,exception.message));
+    end
 end
+end
+
+function testHistoricalBridgeFreeSpinIsARealMechanism(testCase)
+model = stanlyfea.readModel(fullfile(testCase.TestData.Root,'examples','bridge3D_gravity.stan'));
+e = model.Mesh.Elements(6,:);
+verifyEqual(testCase,e(2:3),[11 12]);
+% Both nodes occur only in this beam and have no fixed/rigid Rz constraint.
+verifyEqual(testCase,sum(ismember(model.Mesh.Elements(:,2:3),[11 12]),'all'),2);
+verifyFalse(testCase,any(ismember(model.Constraints.Ground(:,1),[11 12])));
+rows = any(ismember(model.Constraints.Internal(:,1:2),[11 12]),2);
+verifyEqual(testCase,model.Constraints.Internal(rows,8),zeros(sum(rows),1));
+R = stanlyfea.rotation(model.Mesh.Nodes(12,2:4)-model.Mesh.Nodes(11,2:4),e(6));
+T = blkdiag(R,R,R,R); spin = zeros(12,1); spin([6 12]) = 1;
+k = stanlyfea.beamStiffness(model.Properties.Materials(1,:), ...
+    model.Properties.Sections(1,:),.75);
+verifyEqual(testCase,k*T*spin,zeros(12,1),'AbsTol',1e-9);
 end
 
 function testMalformedModelTerminates(testCase)
@@ -224,8 +250,7 @@ end
 
 function testExportAndEntryFromAnotherDirectory(testCase)
 folder = tempname; mkdir(folder);
-cleanup = onCleanup(@() rmdir(folder,'s')); %#ok<NASGU>
-previous = pwd; back = onCleanup(@() cd(previous)); %#ok<NASGU>
+previous = pwd; cleanup = onCleanup(@() restoreFolder(previous,folder)); %#ok<NASGU>
 cd(folder);
 filename = fullfile(testCase.TestData.Root,'examples','beam_without.stan');
 r = stanly(filename,fullfile(folder,'result.mat'));
@@ -237,6 +262,11 @@ verifyTrue(testCase,contains(html,'VonMises1'));
 writetable(stanlyfea.resultTable(r,'Displacements'),fullfile(folder,'result.csv'));
 verifyTrue(testCase,isfile(fullfile(folder,'result.csv')));
 verifyTrue(testCase,isfolder(stanlyfea.resourcePath('examples')));
+end
+
+function restoreFolder(previous,temporary)
+cd(previous);
+rmdir(temporary,'s');
 end
 
 function model = beam()

@@ -34,9 +34,9 @@ materials {
 >>> CONSTRAINTS <<<
 ground constraints {
 %n  Kx	Ky	Kz	Krx	Kry	Krz	th	ph
-1 Inf Inf Inf Inf Inf Inf 0 0 
-5 Inf Inf Inf Inf Inf Inf 0 0 
-6 Inf Inf Inf Inf Inf Inf 0 0 
+1 Inf Inf Inf Inf Inf Inf 0 0
+5 Inf Inf Inf Inf Inf Inf 0 0
+6 Inf Inf Inf Inf Inf Inf 0 0
 }
 --------------------------------------------------------------------------
 >>> LOADS <<<

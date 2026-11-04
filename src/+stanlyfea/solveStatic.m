@@ -105,7 +105,7 @@ restore = onCleanup(@() restoreWarnings(state1,state2)); %#ok<NASGU>
 try
     solution = system\rhs;
 catch exception
-    error('Stanly:UnstableModel', 'Cannot solve the frame: %s', exception.message);
+    error('Stanly:UnstableModel', '%s: Cannot solve the frame: %s', model.Filename, exception.message);
 end
 if any(~isfinite(solution)) || norm(system*solution-rhs,Inf) > 1e-7*max(1,norm(rhs,Inf))
     error('Stanly:UnstableModel', 'Singular or unstable frame. Check supports and connectivity.');

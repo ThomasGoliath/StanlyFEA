@@ -51,6 +51,29 @@ classdef App < handle
             uimenu(help,'Text','Input manual','MenuSelectedFcn',@(~,~) app.manual());
             app.Actions = {csvButton,matButton,report,image};
         end
+        function loadFile(app,filename)
+            % Solve before replacing state, so a failed model leaves the old result intact.
+            nextResult = stanlyfea.analyze(filename);
+            app.Result = nextResult;
+            tables = {'Nodes','Elements','Displacements','Reactions','Applied loads', ...
+                'Internal forces','Stress','Nominal stress','Strain','Safety factors'};
+            plots = {'Mesh','Deformed','Loads and supports','Von Mises', ...
+                'Normal stress','Axial force','Shear force','Torque','Bending moment'};
+            if isfield(nextResult,'Fatigue')
+                tables{end+1} = 'Fatigue';
+                plots = [plots, {'Fatigue safety factor','Fatigue life'}];
+            end
+            app.TableChoice.Value = 'Nodes'; app.TableChoice.Items = tables;
+            app.PlotChoice.Value = 'Mesh'; app.PlotChoice.Items = plots;
+            span = max(max(nextResult.Model.Mesh.Nodes(:,2:4))-min(nextResult.Model.Mesh.Nodes(:,2:4)));
+            maximum = max(vecnorm(nextResult.Displacements(:,1:3),2,2));
+            if maximum > 0, app.Scale.Value = span/(10*maximum); else, app.Scale.Value = 1; end
+            [~,name,extension] = fileparts(filename); name = [name extension];
+            app.Figure.Name = ['STANLY FEA - ' name];
+            app.draw(); app.showTable(); app.setEnabled('on');
+            app.Status.Text = sprintf('%s | %d nodes, %d elements | solved', ...
+                name,size(nextResult.Model.Mesh.Nodes,1),size(nextResult.Model.Mesh.Elements,1));
+        end
         function delete(app)
             if ~isempty(app.Figure) && isgraphics(app.Figure), delete(app.Figure); end
         end
@@ -62,19 +85,7 @@ classdef App < handle
             if isequal(name,0), return; end
             app.Status.Text = 'Solving...'; drawnow;
             try
-                nextResult = stanlyfea.analyze(fullfile(folder,name));
-                app.Result = nextResult;
-                items = {'Nodes','Elements','Displacements','Reactions','Applied loads', ...
-                    'Internal forces','Stress','Nominal stress','Strain','Safety factors'};
-                if isfield(nextResult,'Fatigue'), items{end+1} = 'Fatigue'; end
-                app.TableChoice.Value = 'Nodes'; app.TableChoice.Items = items;
-                span = max(max(nextResult.Model.Mesh.Nodes(:,2:4))-min(nextResult.Model.Mesh.Nodes(:,2:4)));
-                maximum = max(vecnorm(nextResult.Displacements(:,1:3),2,2));
-                if maximum > 0, app.Scale.Value = span/(10*maximum); else, app.Scale.Value = 1; end
-                app.Figure.Name = ['STANLY FEA - ' name];
-                app.draw(); app.showTable(); app.setEnabled('on');
-                app.Status.Text = sprintf('%s | %d nodes, %d elements | solved', ...
-                    name,size(nextResult.Model.Mesh.Nodes,1),size(nextResult.Model.Mesh.Elements,1));
+                app.loadFile(fullfile(folder,name));
             catch exception
                 app.Status.Text = 'Load failed';
                 uialert(app.Figure,exception.message,'Cannot solve model');

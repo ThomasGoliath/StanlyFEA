@@ -113,6 +113,13 @@ thermal expansion, prescribed displacement, elastic supports and ties, inclined
 constraints, compression/notches, file errors and exports. It also reads and solves
 all restored historical examples. CI targets R2024b and the latest MATLAB.
 
+`bridge3D_gravity.stan` is an intentional rejection test. Its vertical member 6
+connects nodes 11/12, each used by that member alone, with both global Rz rotations
+released by the internal ties. Equal Rz at those ends is a zero-energy axial spin.
+The input has a genuine unconstrained rotational mode and is rejected rather than
+silently stabilized. Its original data are retained. Tests explicitly establish
+this mechanism from the model and element stiffness.
+
 The authoring workstation has Runtime v93 (R2017b), but no full MATLAB or Compiler
 executable. Active MATLAB sources passed MISS_HIT syntax/lint checks. MATLAB tests,
 desktop UI and Compiler builds still require native execution; static checks do

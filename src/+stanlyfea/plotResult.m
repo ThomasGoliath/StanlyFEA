@@ -9,6 +9,13 @@ switch kind
         colorValues = max(result.Stress.Max(:,[5 13]),[],2); label = 'Von Mises stress';
     case 'Normal stress'
         colorValues = max(abs(result.Stress.Max(:,[1 9])),[],2); label = 'Absolute normal stress envelope';
+    case 'Fatigue safety factor'
+        colorValues = min(result.Fatigue.SafetyFactors,[],2);
+        colorValues(isinf(colorValues)) = NaN;
+        label = 'Minimum legacy fatigue safety factor (gray = infinite)';
+    case 'Fatigue life'
+        colorValues = min(result.Fatigue.Values(:,[4 8]),[],2);
+        label = 'Estimated legacy fatigue cycles';
     case {'Axial force','Shear force','Torque','Bending moment'}
         switch kind
             case 'Axial force', columns = [1 7];
@@ -19,14 +26,15 @@ switch kind
         colorValues = max(abs(result.InternalForces(:,columns)),[],2); label = [kind ' (end envelope)'];
 end
 if ~isempty(colorValues)
-    colors = parula(256); lo = min(colorValues); hi = max(colorValues);
+    colors = parula(256); finite = colorValues(isfinite(colorValues));
+    if isempty(finite), lo = 0; hi = 1; else, lo = min(finite); hi = max(finite); end
     if lo == hi, hi = lo+max(1,abs(lo))*1e-6; end
     colormap(ax,colors); clim(ax,[lo hi]); colorbar(ax);
 end
 for i = 1:size(e,1)
     [~, ends] = ismember(e(i,2:3),nodes(:,1)); xyz = nodes(ends,2:4);
     color = [.25 .35 .5]; width = 1.5;
-    if ~isempty(colorValues)
+    if ~isempty(colorValues) && isfinite(colorValues(i))
         index = 1+round(255*(colorValues(i)-lo)/(hi-lo));
         color = colors(index,:); width = 3;
     end
